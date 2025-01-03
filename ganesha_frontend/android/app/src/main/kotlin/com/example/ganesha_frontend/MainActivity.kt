@@ -1,0 +1,5 @@
+package com.example.ganesha_frontend
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()
