@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ganesha_frontend/Pages/Register/InitialPage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterDataPage.dart';
+import 'package:ganesha_frontend/Pages/Register/RegisterNamePage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterSimtomsPage.dart';
 
 class RegisterShell extends StatefulWidget {
@@ -17,6 +18,7 @@ class _RegisterShellState extends State<RegisterShell> {
 
   final pages = [
     InitialRegisterpage(),
+    RegisterNamePage(),
     RegisterDataPage(),
     RegisterSimtomsPage()
   ];
@@ -81,7 +83,7 @@ class _RegisterShellState extends State<RegisterShell> {
   }
 
   forward() {
-    if (_index == 1 && !(pages[1] as RegisterDataPage).validate()) {
+    if (_index == 2 && !(pages[2] as RegisterDataPage).validate()) {
       // Show an error message or handle validation failure
 
       return;
@@ -104,7 +106,7 @@ class _RegisterShellState extends State<RegisterShell> {
   }
 
   register() {
-    final name = (pages[1] as RegisterDataPage).getName();
+    final name = (pages[2] as RegisterDataPage).getName();
     print('Nombre registrado: $name');
   }
 }
