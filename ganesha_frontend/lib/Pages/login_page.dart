@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:ganesha_frontend/Shells/PrincipalShell.dart';
+import 'package:ganesha_frontend/Shells/principal_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
@@ -66,10 +66,9 @@ class _LoginPageState extends State<LoginPage> {
                                 dynamic aux = _formKey.currentState!.value;
 
                                 try {
-                                  final res = await supabase.auth
-                                      .signInWithPassword(
-                                          email: aux['email'],
-                                          password: aux['password']);
+                                  await supabase.auth.signInWithPassword(
+                                      email: aux['email'],
+                                      password: aux['password']);
                                   Navigator.pushReplacementNamed(
                                       context, Principalshell.routeName);
                                 } catch (e) {

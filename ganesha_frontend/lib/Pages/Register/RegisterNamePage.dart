@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:ganesha_frontend/Pages/LoginPage.dart';
+import 'package:ganesha_frontend/Pages/login_page.dart';
 
 class RegisterNamePage extends StatefulWidget {
   RegisterNamePage({super.key, this.name = '', this.lastName = ''});

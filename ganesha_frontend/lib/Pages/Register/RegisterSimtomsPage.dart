@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RegisterSimtomsPage extends StatelessWidget {
-  const RegisterSimtomsPage({Key? key});
+  const RegisterSimtomsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
