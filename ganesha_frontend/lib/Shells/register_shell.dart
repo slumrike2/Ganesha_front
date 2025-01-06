@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ganesha_frontend/Pages/Register/InitialPage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterDataPage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterNamePage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterSimtomsPage.dart';
 import 'package:ganesha_frontend/Shells/principal_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:ganesha_frontend/dartTypes.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RegisterShell extends StatefulWidget {
   static final String routeName = '/register';
@@ -145,14 +149,50 @@ class _RegisterShellState extends State<RegisterShell> {
     }
   }
 
+  addUser(String id, String nombre, String apellido, String username, int peso,
+      int estatura, String tipoEntrada, String email) async {
+      final response =
+        await http.post(Uri.parse('${dotenv.get('API_URL')}/auth/addUser'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+              'Authorization': dotenv.get('API_KEY')
+            },
+            body: jsonEncode({
+              'id_usuario': id,
+              'nombre': nombre,
+              'apellido': apellido,
+              'username': username,
+              'peso': peso,
+              'estatura': estatura,
+              'puntaje': 0,
+              'tipo_entrada': tipoEntrada,
+              'email': email,
+              'contrasena': 'que tu ta viendo'
+            }));
+
+    if (response.statusCode == 200) {
+      return 200;
+    } else {
+      throw Exception('Failed to create user ${response.body}');
+    }
+  }
+
   register() async {
     try {
       final res = await supabase.auth
           .signUp(password: datos.password!, email: datos.email!);
       if (res.user != null) {
-        Navigator.pushReplacementNamed(context, Principalshell.routeName);
+        final user = await addUser(res.user!.id, datos.name!, datos.lastName!,
+            datos.username!, 1, 1, 'Email', datos.email!);
+        if (user == 200) {
+          Navigator.pushReplacementNamed(context, Principalshell.routeName);
+        } else {
+          //!TODO: Show error message
+          print('Error al crear usuario');
+        }
       }
     } catch (e) {
+      //!TODO: Show error message
       print('Error: $e');
     }
   }

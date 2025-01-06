@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ganesha_frontend/Components/music_preview.dart';
+import 'package:ganesha_frontend/dartTypes.dart';
+import 'package:http/http.dart' as http;
 
 class MusicPage extends StatelessWidget {
   const MusicPage({super.key});
@@ -40,5 +45,23 @@ class MusicPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<List<Song>> getSongs() async {
+    final response =
+        await http.get(Uri.parse('${dotenv.env['API_URL']}/songs'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${dotenv.env['API_KEY']}',
+    });
+
+    if (response.statusCode == 200) {
+      List<Song> songs = [];
+      for (var song in jsonDecode(response.body)) {
+        songs.add(Song.fromJson(song));
+      }
+      return songs;
+    } else {
+      throw Exception('Failed to load songs');
+    }
   }
 }

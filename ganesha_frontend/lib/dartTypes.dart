@@ -34,7 +34,7 @@ class Song {
   }
 }
 
-class User {
+class Ganesha_User {
   final String idUsuario;
   final String nombre;
   final String apellido;
@@ -46,7 +46,7 @@ class User {
   final String tipoEntrada;
   final String username;
 
-  User({
+  Ganesha_User({
     required this.idUsuario,
     required this.nombre,
     required this.apellido,
@@ -59,8 +59,8 @@ class User {
     required this.username,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory Ganesha_User.fromJson(Map<String, dynamic> json) {
+    return Ganesha_User(
       idUsuario: json['id_usuario'],
       nombre: json['nombre'],
       apellido: json['apellido'],
