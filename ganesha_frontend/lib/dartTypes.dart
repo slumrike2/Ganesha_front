@@ -4,6 +4,7 @@ class Song {
   final String urlImg;
   final int duracion;
   final int costePun;
+  bool unloock;
 
   Song({
     required this.idCancion,
@@ -11,6 +12,7 @@ class Song {
     required this.urlImg,
     required this.duracion,
     required this.costePun,
+    this.unloock = false,
   });
 
   factory Song.fromJson(Map<String, dynamic> json) {

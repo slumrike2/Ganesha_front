@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ganesha_frontend/Components/music_preview.dart';
 import 'package:ganesha_frontend/dartTypes.dart';
 import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MusicPage extends StatelessWidget {
   const MusicPage({super.key});
@@ -19,45 +20,69 @@ class MusicPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('Musica', style: TextStyle(fontSize: 32, color: Colors.white)),
-          Expanded(
-              child: Container(
-            padding: EdgeInsets.all(32),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    spacing: 16,
-                    children: [
-                      for (int i = 1; i <= 10; i++)
-                        MusicPreview(
-                            title:
-                                'Cancion extremadamente larga que no se distinque $i'),
-                      for (int i = 1; i <= 10; i++)
-                        MusicPreview(
-                            title: 'Cancion $i', unloock: false, price: 100),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )),
+          FutureBuilder<List<Song>>(
+              future: getSongs(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  return Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(32),
+                      child: SafeArea(
+                        child: SingleChildScrollView(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                                spacing: 16,
+                                children: snapshot.data!
+                                    .map((song) => MusicPreview(
+                                          title: song.titulo,
+                                          unloock: song.unloock,
+                                          price: song.costePun,
+                                        ))
+                                    .toList()),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              })
         ],
       ),
     );
   }
 
   Future<List<Song>> getSongs() async {
-    final response =
+    final responseSongs =
         await http.get(Uri.parse('${dotenv.env['API_URL']}/songs'), headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${dotenv.env['API_KEY']}',
+      'Authorization': '${dotenv.env['API_KEY']}',
     });
 
-    if (response.statusCode == 200) {
+    SupabaseClient supabase = Supabase.instance.client;
+
+    final responseUserSongs = await http.get(
+        Uri.parse(
+            '${dotenv.env['API_URL']}/user/songs/${supabase.auth.currentSession?.user.id}'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': '${dotenv.env['API_KEY']}',
+        });
+
+    if (responseSongs.statusCode == 200 &&
+        responseUserSongs.statusCode == 200) {
       List<Song> songs = [];
-      for (var song in jsonDecode(response.body)) {
+      for (var song in jsonDecode(responseSongs.body)) {
         songs.add(Song.fromJson(song));
+        if (jsonDecode(responseUserSongs.body).any((song) =>
+            song['id_cancion'] == songs.last.idCancion &&
+            song['id_usuario'] == supabase.auth.currentSession?.user.id)) {
+          songs.last.unloock = true;
+        }
       }
       return songs;
     } else {
