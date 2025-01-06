@@ -5,6 +5,6 @@ class StadisticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Stats page'));
+    return Center(child: Image.asset('assets/Logo.png'));
   }
 }
