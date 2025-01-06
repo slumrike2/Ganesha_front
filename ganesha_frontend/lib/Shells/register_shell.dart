@@ -3,6 +3,7 @@ import 'package:ganesha_frontend/Pages/Register/InitialPage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterDataPage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterNamePage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterSimtomsPage.dart';
+import 'package:ganesha_frontend/Shells/principal_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterShell extends StatefulWidget {
@@ -28,8 +29,6 @@ class _RegisterShellState extends State<RegisterShell> {
 
   @override
   Widget build(BuildContext context) {
-    final double sizew = MediaQuery.of(context).size.width;
-    final double sizeh = MediaQuery.of(context).size.height;
     final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
@@ -146,8 +145,16 @@ class _RegisterShellState extends State<RegisterShell> {
     }
   }
 
-  register() {
-    supabase.auth.signUp(password: datos.password!, email: datos.email!);
+  register() async {
+    try {
+      final res = await supabase.auth
+          .signUp(password: datos.password!, email: datos.email!);
+      if (res.user != null) {
+        Navigator.pushReplacementNamed(context, Principalshell.routeName);
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
 

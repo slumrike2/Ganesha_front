@@ -17,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final sizeh = MediaQuery.of(context).size.height;
-    final sizew = MediaQuery.of(context).size.width;
 
     SupabaseClient supabase = Supabase.instance.client;
 
