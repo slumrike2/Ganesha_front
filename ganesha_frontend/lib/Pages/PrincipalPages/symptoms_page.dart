@@ -13,7 +13,6 @@ class _SymptomsPageState extends State<SymptomsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         children: [
           Row(
@@ -21,13 +20,14 @@ class _SymptomsPageState extends State<SymptomsPage> {
             children: [
               Spacer(),
               Expanded(
+                flex: 2,
                 child: Text(
                   'Sintomas',
                   style: TextStyle(fontSize: 32, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
-              Flexible(
+              Expanded(
                 child: Container(
                   width: double.infinity,
                   child: Row(
@@ -52,19 +52,22 @@ class _SymptomsPageState extends State<SymptomsPage> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
-              clipBehavior: Clip.antiAlias,
-              itemCount: 15,
-              itemBuilder: (context, index) {
-                return SymptomTest(
-                  extended: false,
-                  data: Sintoma(
-                    nombre: 'Sintoma $index',
-                    descripcion: 'Descripcion del sintoma $index',
-                    idSintoma: index,
-                  ),
-                );
-              },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: ListView.builder(
+                clipBehavior: Clip.antiAlias,
+                itemCount: 15,
+                itemBuilder: (context, index) {
+                  return SymptomTest(
+                    extended: false,
+                    data: Sintoma(
+                      nombre: 'Sintoma $index',
+                      descripcion: 'Descripcion del sintoma $index',
+                      idSintoma: index,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           ElevatedButton(onPressed: () {}, child: Text('Submit'))
