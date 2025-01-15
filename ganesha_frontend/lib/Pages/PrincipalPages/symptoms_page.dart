@@ -16,10 +16,40 @@ class _SymptomsPageState extends State<SymptomsPage> {
       padding: EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         children: [
-          Text(
-            'Sintomas',
-            style: TextStyle(fontSize: 32, color: Colors.white),
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Spacer(),
+              Expanded(
+                child: Text(
+                  'Sintomas',
+                  style: TextStyle(fontSize: 32, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Flexible(
+                child: Container(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.list, color: Colors.white),
+                        onPressed: () {
+                          // Handle list view action
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.grid_view, color: Colors.white),
+                        onPressed: () {
+                          // Handle grid view action
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: ListView.builder(
