@@ -6,7 +6,6 @@ import 'package:ganesha_frontend/Pages/Register/RegisterNamePage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterSimtomsPage.dart';
 import 'package:ganesha_frontend/Shells/principal_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ganesha_frontend/dartTypes.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

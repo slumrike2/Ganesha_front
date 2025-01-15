@@ -16,7 +16,7 @@ class Principalshell extends StatefulWidget {
 class _PrincipalshellState extends State<Principalshell> {
   int _selectedIndex = 0;
 
-  List<Widget> _pages = [
+  final List<Widget> _pages = [
     HomePage(),
     FriendsPage(),
     MusicPage(),
@@ -91,9 +91,9 @@ class _PrincipalshellState extends State<Principalshell> {
                     spacing: 8,
                     children: [
                       Icon(
-                        Icons.circle,
+                        Icons.monetization_on,
                         color: Colors.yellow,
-                        size: 10,
+                        size: 25,
                       ),
                       Text(
                         '500',
