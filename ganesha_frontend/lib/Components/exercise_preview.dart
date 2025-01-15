@@ -20,7 +20,6 @@ class ExercisePreview extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            
             width: double.infinity,
             height: sizew * 0.1 + sizeh * 0.05,
             decoration: BoxDecoration(
@@ -28,8 +27,13 @@ class ExercisePreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
           ),
-          Text('Ejercicio', style: TextStyle(fontSize: 24)),
-          Text('Descripcion del ejercicio'),
+          Text('Ejercicio',
+              style: TextStyle(fontSize: 24, color: Colors.white)),
+          Text(
+            'Descripcion del ejercicio',
+            style: TextStyle(fontSize: 16, color: Colors.white),
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );

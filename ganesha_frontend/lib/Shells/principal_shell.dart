@@ -3,7 +3,7 @@ import 'package:ganesha_frontend/Pages/PrincipalPages/friends_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/home_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/music_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/stadistics_page.dart';
-import 'package:ganesha_frontend/Pages/PrincipalPages/symptoms_page.dart';
+import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
 
 class Principalshell extends StatefulWidget {
   static final String routeName = '/principal';
@@ -21,7 +21,6 @@ class _PrincipalshellState extends State<Principalshell> {
     FriendsPage(),
     MusicPage(),
     StadisticsPage(),
-    SymptomsPage()
   ];
 
   @override
@@ -72,10 +71,6 @@ class _PrincipalshellState extends State<Principalshell> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.bar_chart),
                 label: 'Estadisticas',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.health_and_safety),
-                label: 'Sintomas',
               ),
             ],
           ),

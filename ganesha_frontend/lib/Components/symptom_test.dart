@@ -9,6 +9,10 @@ class SymptomTest extends StatefulWidget {
 
   @override
   State<SymptomTest> createState() => _SymptomTestState();
+
+  bool isChecked() {
+    return checked;
+  }
 }
 
 class _SymptomTestState extends State<SymptomTest> {
