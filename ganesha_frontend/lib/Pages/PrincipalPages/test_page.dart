@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:ganesha_frontend/Components/symptom_test.dart';
 import 'package:ganesha_frontend/dartTypes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TestPage extends StatefulWidget {
   static final String routeName = '/test';
@@ -57,6 +61,7 @@ class _TestPageState extends State<TestPage> {
                   padding: EdgeInsets.all(16),
                   child: SingleChildScrollView(
                       child: Column(
+                        // Aqui debemos de conectar con la informacion del backend
                     children: List.generate(15, (index) {
                       final symptomTest = SymptomTest(
                         data: Sintoma(
@@ -93,5 +98,35 @@ class _TestPageState extends State<TestPage> {
         ),
       ],
     );
+  }
+
+  // HTTP Requests for Symptoms
+  Future<List<Sintoma>> getSymptom() async {
+    final responseSymptom =
+        await http.get(Uri.parse('${dotenv.env['API_URL']}/symptoms/'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': '${dotenv.env['API_KEY']}',
+    });
+
+    // SupabaseClient supabase = Supabase.instance.client;
+
+    // This part will be used to send info to the main route of the Test's module
+/*     final responseUserSongs = await http.get(
+        Uri.parse(
+            '${dotenv.env['API_URL']}/user/songs/${supabase.auth.currentSession?.user.id}'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': '${dotenv.env['API_KEY']}',
+        }); */
+
+    if (responseSymptom.statusCode == 200) {
+      List<Sintoma> symptoms = [];
+      for (var symptom in jsonDecode(responseSymptom.body)) {
+        symptoms.add(Sintoma.fromJson(symptom));
+      }
+      return symptoms;
+    } else {
+      throw Exception('Failed to load symptoms');
+    }
   }
 }
