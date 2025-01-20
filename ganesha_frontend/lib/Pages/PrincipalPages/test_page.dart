@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TestPage extends StatefulWidget {
   static final String routeName = '/test';
-  TestPage({super.key});
+  const TestPage({super.key});
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -56,28 +56,36 @@ class _TestPageState extends State<TestPage> {
                   style: TextStyle(fontSize: 32, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: SingleChildScrollView(
-                      child: Column(
-                        // Aqui debemos de conectar con la informacion del backend
-                    children: List.generate(15, (index) {
-                      final symptomTest = SymptomTest(
-                        data: Sintoma(
-                          nombre: 'Sintoma $index',
-                          descripcion: 'Descripcion del sintoma $index',
-                          idSintoma: index,
+                FutureBuilder<List<Sintoma>>(
+                  future: getSymptom(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else {
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: snapshot.data!
+                                  .map((sintoma) {
+                                    final symptomTest = SymptomTest(data: sintoma);
+                                    _symptomTests.add(symptomTest);
+                                    return Container(
+                                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                                      child: symptomTest,
+                                    );
+                                  })
+                                  .toList(),
+                            ),
+                          ),
                         ),
                       );
-                      _symptomTests.add(symptomTest);
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
-                        child: symptomTest,
-                      );
-                    }),
-                  )),
-                )),
+                    }
+                  },
+                ),
                 ElevatedButton(
                     onPressed: () {
                       final checkedSymptoms = _symptomTests
