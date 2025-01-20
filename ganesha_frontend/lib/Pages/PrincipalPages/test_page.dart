@@ -116,17 +116,6 @@ class _TestPageState extends State<TestPage> {
       'Authorization': '${dotenv.env['API_KEY']}',
     });
 
-    // SupabaseClient supabase = Supabase.instance.client;
-
-    // This part will be used to send info to the main route of the Test's module
-/*     final responseUserSongs = await http.get(
-        Uri.parse(
-            '${dotenv.env['API_URL']}/user/songs/${supabase.auth.currentSession?.user.id}'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': '${dotenv.env['API_KEY']}',
-        }); */
-
     if (responseSymptom.statusCode == 200) {
       List<Sintoma> symptoms = [];
       for (var symptom in jsonDecode(responseSymptom.body)) {
