@@ -96,6 +96,8 @@ class _TestPageState extends State<TestPage> {
                       for (var symptom in checkedSymptoms) {
                         print(symptom.idSintoma);
                       }
+
+                      submitCheckedSymptoms(checkedSymptoms);
                       Navigator.pop(context);
                       // Do something with checkedSymptoms
                     },
@@ -124,6 +126,26 @@ class _TestPageState extends State<TestPage> {
       return symptoms;
     } else {
       throw Exception('Failed to load symptoms');
+    }
+  }
+
+  // HTTP Requests for User Symptoms
+  Future<void> submitCheckedSymptoms(List<Sintoma> checkedSymptoms) async {
+    SupabaseClient supabase = Supabase.instance.client;
+
+    final responseCheckedSymptoms =
+        await http.post(Uri.parse('${dotenv.env['API_URL']}/tests/submit'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': '${dotenv.env['API_KEY']}',
+    }, body: jsonEncode({
+      'test': checkedSymptoms.map((symptom) => symptom.toJson()).toList(),
+      'user_uid': supabase.auth.currentSession?.user.id,
+    }));
+
+    if (responseCheckedSymptoms.statusCode != 200) {
+      throw Exception('Failed to submit symptoms');
+    } else {
+      print('Symptoms submitted');
     }
   }
 }
