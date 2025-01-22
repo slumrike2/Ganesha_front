@@ -196,18 +196,21 @@ class Ejercicio {
   final int idEjercicio;
   final String descripcion;
   final String nombre;
+  final int prioridad;
 
   Ejercicio({
     required this.idEjercicio,
     required this.descripcion,
     required this.nombre,
+    required this.prioridad,
   });
 
   factory Ejercicio.fromJson(Map<String, dynamic> json) {
     return Ejercicio(
-      idEjercicio: json['id_ejercicio'],
+      idEjercicio: json['idEjercicio'],
       descripcion: json['descripcion'],
       nombre: json['nombre'],
+      prioridad: json['prioridad'],
     );
   }
 
@@ -300,14 +303,14 @@ class Sintoma {
   final int idSintoma;
   final String descripcion;
   final String nombre;
-  final String? pregunta;
+  final String pregunta;
   final String? tipo;
 
   Sintoma({
     required this.idSintoma,
     required this.descripcion,
     required this.nombre,
-    this.pregunta,
+    required this.pregunta,
     this.tipo,
   });
 
@@ -355,5 +358,3 @@ class Equipamiento {
     };
   }
 }
-
-

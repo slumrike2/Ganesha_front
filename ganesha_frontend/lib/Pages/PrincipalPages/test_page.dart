@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:ganesha_frontend/Components/symptom_test.dart';
 import 'package:ganesha_frontend/dartTypes.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -73,22 +72,23 @@ class _TestPageState extends State<TestPage> {
                                 final symptomTest = SymptomTest(data: sintoma);
                                 _symptomTests.add(symptomTest);
                                 return Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                                  padding: EdgeInsets.all(8.0),
+                                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                  padding: EdgeInsets.all(16.0),
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white),
+                                    color: Colors.blueGrey[50],
+                                    border: Border.all(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              sintoma.nombre,
-                                              style: TextStyle(fontSize: 18, color: Colors.white),
+                                              sintoma.pregunta,
+                                              style: TextStyle(fontSize: 18, color: Colors.black),
                                             ),
                                           ),
                                           StatefulBuilder(
@@ -105,10 +105,10 @@ class _TestPageState extends State<TestPage> {
                                           ),
                                         ],
                                       ),
-                                      Divider(color: Colors.white),
+                                      Divider(color: Colors.grey),
                                       Text(
                                         sintoma.descripcion,
-                                        style: TextStyle(fontSize: 14, color: Colors.white),
+                                        style: TextStyle(fontSize: 14, color: Colors.black),
                                       ),
                                     ],
                                   ),
@@ -128,9 +128,6 @@ class _TestPageState extends State<TestPage> {
                           .map((symptomTest) => symptomTest.data)
                           .toList();
 
-                      for (var symptom in checkedSymptoms) {
-                        print(symptom.idSintoma);
-                      }
 
                       submitCheckedSymptoms(checkedSymptoms);
                       Navigator.pop(context);

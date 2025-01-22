@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ganesha_frontend/Components/symptom_test.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
 import 'package:ganesha_frontend/Pages/login_page.dart';
 import 'package:ganesha_frontend/Shells/principal_shell.dart';
 import 'package:ganesha_frontend/Shells/register_shell.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/exercise_list_page.dart';
 
 void main() async {
