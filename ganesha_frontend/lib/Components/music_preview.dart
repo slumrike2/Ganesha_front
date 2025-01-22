@@ -3,27 +3,57 @@ import 'package:marquee/marquee.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'audio_controller.dart';
 
-class MusicPreview extends StatelessWidget {
-  const MusicPreview(
-      {super.key, required this.title, this.unloock = true, this.price = 0});
+class MusicPreview extends StatefulWidget {
   final String title;
   final bool unloock;
   final int price;
 
+  const MusicPreview({
+    Key? key,
+    required this.title,
+    required this.unloock,
+    required this.price,
+  }) : super(key: key);
+
+  @override
+  _MusicPreviewState createState() => _MusicPreviewState();
+}
+
+class _MusicPreviewState extends State<MusicPreview> {
+  bool isPlaying = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void _togglePlayPause() async {
+    if (isPlaying) {
+      await AudioController().stop();
+    } else {
+      var path = 'audio/${widget.title}.mp3';
+      await AudioController().play(AssetSource(path));
+    }
+    setState(() {
+      isPlaying = !isPlaying;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final textPainter = TextPainter(
-      text: TextSpan(text: title, style: TextStyle(color: Colors.white)),
+      text: TextSpan(text: widget.title, style: TextStyle(color: Colors.white)),
       maxLines: 1,
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: MediaQuery.of(context).size.width - 100);
 
     final isOverflowing = textPainter.didExceedMaxLines;
-    final AudioPlayer _audioPlayer = AudioPlayer(); 
 
     return Container(
         decoration: BoxDecoration(
-          color: unloock
+          color: widget.unloock
               ? const Color.fromARGB(255, 137, 187, 211)
               : const Color.fromARGB(255, 58, 75, 124),
           borderRadius: BorderRadius.circular(8),
@@ -41,7 +71,7 @@ class MusicPreview extends StatelessWidget {
                       height: 15.0,
                       // Set a fixed height for the Marquee
                       child: Marquee(
-                        text: title,
+                        text: widget.title,
                         style: TextStyle(color: Colors.white),
                         scrollAxis: Axis.horizontal,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,23 +83,23 @@ class MusicPreview extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      title,
+                      widget.title,
                       style: TextStyle(color: Colors.white),
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
                     ),
             ),
-            if (!unloock)
+            if (!widget.unloock)
               Row(
                 children: [
                   Text(
-                    '$price',
+                    '${widget.price}',
                     style: TextStyle(color: Colors.white),
                   ),
                   Icon(Icons.monetization_on, color: Colors.yellow),
                 ],
               ),
-            (!unloock)
+            (!widget.unloock)
                 ? IconButton(
                     onPressed: () {},
                     icon: Icon(Icons.lock_open, color: Colors.white))
@@ -77,13 +107,11 @@ class MusicPreview extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(Icons.card_giftcard_outlined,
                         color: Colors.white)),
-            if (unloock)
+            if (widget.unloock)
               IconButton(
-                icon: Icon(Icons.play_arrow, color: Colors.white),
-                onPressed: () async {
-                    var path = 'audio/${title}.mp3';
-                    await AudioController().play(AssetSource(path));
-                },
+                icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
+                    color: Colors.white),
+                onPressed: _togglePlayPause,
               ),
           ],
         ));

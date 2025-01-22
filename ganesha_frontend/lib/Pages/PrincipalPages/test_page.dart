@@ -18,18 +18,18 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   final List<SymptomTest> _symptomTests = [];
-  String _selectedType = 'All';
-  List<String> _types = ['All'];
+  String _selectedType = 'Todos';
+  final List<String> _types = ['Todos'];
 
   @override
   void initState() {
     super.initState();
-    widget.symptoms.forEach((sintoma) {
+    for (var sintoma in widget.symptoms) {
       _symptomTests.add(SymptomTest(data: sintoma));
       if (!_types.contains(sintoma.tipo)) {
         _types.add(sintoma.tipo);
       }
-    });
+    }
   }
 
   @override
@@ -38,7 +38,7 @@ class _TestPageState extends State<TestPage> {
   }
 
   List<SymptomTest> _filterSymptoms() {
-    if (_selectedType == 'All') {
+    if (_selectedType == 'Todos') {
       return _symptomTests;
     } else {
       return _symptomTests

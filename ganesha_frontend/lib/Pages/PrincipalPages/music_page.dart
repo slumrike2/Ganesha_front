@@ -28,6 +28,8 @@ class MusicPage extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
+                  final songs = snapshot.data!;
+                  songs.sort((a, b) => b.unloock ? 1 : -1);
                   return Expanded(
                     child: Container(
                       padding: EdgeInsets.all(32),
@@ -37,7 +39,7 @@ class MusicPage extends StatelessWidget {
                             width: double.infinity,
                             child: Column(
                                 spacing: 16,
-                                children: snapshot.data!
+                                children: songs
                                     .map((song) => MusicPreview(
                                           title: song.titulo,
                                           unloock: song.unloock,
@@ -56,7 +58,7 @@ class MusicPage extends StatelessWidget {
     );
   }
 
-Future<List<Song>> getSongs() async {
+  Future<List<Song>> getSongs() async {
     final responseSongs =
         await http.get(Uri.parse('${dotenv.env['API_URL']}/songs'), headers: {
       'Content-Type': 'application/json',
@@ -78,9 +80,9 @@ Future<List<Song>> getSongs() async {
       List<Song> songs = [];
       for (var song in jsonDecode(responseSongs.body)) {
         songs.add(Song.fromJson(song));
-        if (jsonDecode(responseUserSongs.body).any((song) =>
-            song['id_cancion'] == songs.last.idCancion &&
-            song['id_usuario'] == supabase.auth.currentSession?.user.id)) {
+        if (jsonDecode(responseUserSongs.body).any((userSong) =>
+            userSong['id_cancion'] == songs.last.idCancion &&
+            userSong['id_usuario'] == supabase.auth.currentSession?.user.id)) {
           songs.last.unloock = true;
         }
       }
