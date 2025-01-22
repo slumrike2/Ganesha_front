@@ -69,6 +69,7 @@ class ExerciseListPage extends StatelessWidget {
                                 ElevatedButton(
                                   onPressed: () async {
                                     await markExerciseAsDone(exercise.idEjercicio);
+                                    Navigator.pop(context, true);
                                   },
                                   child: Text('Done'),
                                 ),

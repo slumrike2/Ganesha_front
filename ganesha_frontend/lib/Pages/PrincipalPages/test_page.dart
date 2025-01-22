@@ -162,15 +162,14 @@ class _TestPageState extends State<TestPage> {
                   ),
                 ),
                 ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final checkedSymptoms = _symptomTests
                           .where((symptomTest) => symptomTest.isChecked())
                           .map((symptomTest) => symptomTest.data)
                           .toList();
 
-
-                      submitCheckedSymptoms(checkedSymptoms);
-                      Navigator.pop(context);
+                      await submitCheckedSymptoms(checkedSymptoms);
+                      Navigator.pop(context, true);
                       // Do something with checkedSymptoms
                     },
                     child: Text('Submit'))

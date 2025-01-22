@@ -72,25 +72,17 @@ class GaneshaUser {
   final String idUsuario;
   final String nombre;
   final String apellido;
-  final String? contrasena;
-  final String? email;
-  final int estatura;
-  final int peso;
-  final int puntaje;
-  final String tipoEntrada;
   final String username;
+  final String puntaje;
+  final int ejerciciosCompletados;
 
   GaneshaUser({
     required this.idUsuario,
     required this.nombre,
     required this.apellido,
-    this.contrasena,
-    this.email,
-    required this.estatura,
-    required this.peso,
-    required this.puntaje,
-    required this.tipoEntrada,
     required this.username,
+    required this.puntaje,
+    required this.ejerciciosCompletados,
   });
 
   factory GaneshaUser.fromJson(Map<String, dynamic> json) {
@@ -98,13 +90,9 @@ class GaneshaUser {
       idUsuario: json['id_usuario'],
       nombre: json['nombre'],
       apellido: json['apellido'],
-      contrasena: json['contrasena'],
-      email: json['email'],
-      estatura: json['estatura'],
-      peso: json['peso'],
-      puntaje: json['puntaje'],
-      tipoEntrada: json['tipo_entrada'],
       username: json['username'],
+      puntaje: json['puntaje'],
+      ejerciciosCompletados: json['ejercicios_completados'],
     );
   }
 
@@ -113,13 +101,9 @@ class GaneshaUser {
       'id_usuario': idUsuario,
       'nombre': nombre,
       'apellido': apellido,
-      'contrasena': contrasena,
-      'email': email,
-      'estatura': estatura,
-      'peso': peso,
-      'puntaje': puntaje,
-      'tipo_entrada': tipoEntrada,
       'username': username,
+      'puntaje': puntaje,
+      'ejercicios_completados': ejerciciosCompletados,
     };
   }
 }
