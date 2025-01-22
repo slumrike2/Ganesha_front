@@ -8,8 +8,16 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  static List<Sintoma>? _cachedSymptoms;
+  static List<Ejercicio>? _cachedExercises;
 
   Future<List<dynamic>> fetchData() async {
     final symptomsFuture = fetchSymptoms();
@@ -18,6 +26,10 @@ class HomePage extends StatelessWidget {
   }
 
   Future<List<Sintoma>> fetchSymptoms() async {
+    if (_cachedSymptoms != null) {
+      return _cachedSymptoms!;
+    }
+
     final response = await http.get(
       Uri.parse('${dotenv.env['API_URL']}/symptoms'),
       headers: {
@@ -28,13 +40,18 @@ class HomePage extends StatelessWidget {
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      return data.map((json) => Sintoma.fromJson(json)).toList();
+      _cachedSymptoms = data.map((json) => Sintoma.fromJson(json)).toList();
+      return _cachedSymptoms!;
     } else {
       throw Exception('Failed to load symptoms');
     }
   }
 
   Future<List<Ejercicio>> fetchExercises() async {
+    if (_cachedExercises != null) {
+      return _cachedExercises!;
+    }
+
     SupabaseClient supabase = Supabase.instance.client;
 
     final response = await http.get(
@@ -48,14 +65,19 @@ class HomePage extends StatelessWidget {
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
-      List<Ejercicio> exercises =
-          body.map((dynamic item) => Ejercicio.fromJson(item)).toList();
-      exercises.sort(
-          (a, b) => b.prioridad.compareTo(a.prioridad)); // Sort by priority
-      return exercises;
+      _cachedExercises = body.map((dynamic item) => Ejercicio.fromJson(item)).toList();
+      _cachedExercises!.sort((a, b) => b.prioridad.compareTo(a.prioridad)); // Sort by priority
+      return _cachedExercises!;
     } else {
       throw Exception('Failed to load exercises');
     }
+  }
+
+  void _refreshData() {
+    setState(() {
+      _cachedSymptoms = null;
+      _cachedExercises = null;
+    });
   }
 
   @override
@@ -66,111 +88,89 @@ class HomePage extends StatelessWidget {
     return FutureBuilder<List<dynamic>>(
       future: fetchData(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          final symptoms = snapshot.data![0] as List<Sintoma>;
-          final exercises = snapshot.data![1] as List<Ejercicio>;
+        final symptoms = snapshot.data?[0] as List<Sintoma>? ?? [];
+        final exercises = snapshot.data?[1] as List<Ejercicio>? ?? [];
 
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              spacing: 8,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 32),
+          child: Column(
+            spacing: 8,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                child: Text(
+                  'Progreso',
+                  style: TextStyle(fontSize: 32, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: InfoBox(
+                      title: 'Racha',
+                      value: '5 días',
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: InfoBox(
+                      title: 'Logros',
+                      value: '20',
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: double.infinity,
+                child: Text(
+                  'Test Diario',
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: snapshot.connectionState == ConnectionState.done
+                    ? () async {
+                        await Navigator.pushNamed(
+                          context,
+                          TestPage.routeName,
+                          arguments: symptoms,
+                        );
+                        _refreshData();
+                      }
+                    : null,
+                child: Text('Comenzar Test'),
+              ),
+              Container(
                   width: double.infinity,
                   child: Text(
-                    'Progreso',
+                    'Ejercicios',
                     style: TextStyle(fontSize: 32, color: Colors.white),
                     textAlign: TextAlign.center,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: InfoBox(
-                        title: 'Racha',
-                        value: '5 días',
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: InfoBox(
-                        title: 'Logros',
-                        value: '20',
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    'Test Diario',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: snapshot.connectionState == ConnectionState.done
-                      ? ElevatedButton(
-                          key: ValueKey('enabledTestButton'),
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              TestPage.routeName,
-                              arguments: symptoms,
-                            );
-                          },
-                          child: Text('Comenzar Test'),
-                        )
-                      : ElevatedButton(
-                          key: ValueKey('disabledTestButton'),
-                          onPressed: null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                          ),
-                          child: Text('Cargando...'),
-                        ),
-                ),
-                Container(
-                    width: double.infinity,
-                    child: Text(
-                      'Ejercicios',
-                      style: TextStyle(fontSize: 32, color: Colors.white),
-                      textAlign: TextAlign.center,
-                    )),
-                AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: snapshot.connectionState == ConnectionState.done
-                      ? ElevatedButton(
-                          key: ValueKey('enabledExerciseButton'),
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              ExerciseListPage.routeName,
-                              arguments: exercises,
-                            );
-                          },
-                          child: Text('Ver Ejercicios'),
-                        )
-                      : ElevatedButton(
-                          key: ValueKey('disabledExerciseButton'),
-                          onPressed: null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                          ),
-                          child: Text('Cargando...'),
-                        ),
-                )
-              ],
-            ),
-          );
-        }
+                  )),
+              ElevatedButton(
+                onPressed: snapshot.connectionState == ConnectionState.done
+                    ? () async {
+                        await Navigator.pushNamed(
+                          context,
+                          ExerciseListPage.routeName,
+                          arguments: exercises,
+                        );
+                        _refreshData();
+                      }
+                    : null,
+                child: Text('Ver Ejercicios'),
+              ),
+              InfoBox(
+                title: 'Ejercicios Pendientes',
+                value: '10', // Replace with actual data
+              ),
+            ],
+          ),
+        );
       },
     );
   }
