@@ -9,7 +9,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final GaneshaUser userData;
+
+  const HomePage({super.key, required this.userData});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -84,6 +86,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final sizew = MediaQuery.of(context).size.width;
     final sizeh = MediaQuery.of(context).size.height;
+    final userName = widget.userData.nombre;
+    final userPoints = widget.userData.puntaje;
 
     return FutureBuilder<List<dynamic>>(
       future: fetchData(),
@@ -100,8 +104,16 @@ class _HomePageState extends State<HomePage> {
               Container(
                 width: double.infinity,
                 child: Text(
-                  'Progreso',
+                  'Welcome, $userName',
                   style: TextStyle(fontSize: 32, color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                child: Text(
+                  'Points: $userPoints',
+                  style: TextStyle(fontSize: 24, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),

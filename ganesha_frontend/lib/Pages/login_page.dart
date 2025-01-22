@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:ganesha_frontend/Shells/principal_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ganesha_frontend/dartTypes.dart';
 
 class LoginPage extends StatefulWidget {
   static final String routeName = '/login';
@@ -13,6 +17,24 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormBuilderState>();
+
+  Future<GaneshaUser> fetchUserData() async {
+    SupabaseClient supabase = Supabase.instance.client;
+
+    final response = await http.get(
+      Uri.parse('${dotenv.env['API_URL']}/user'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${dotenv.env['API_KEY']}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return GaneshaUser.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load user data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +90,16 @@ class _LoginPageState extends State<LoginPage> {
                                   await supabase.auth.signInWithPassword(
                                       email: aux['email'],
                                       password: aux['password']);
-                                  Navigator.pushReplacementNamed(
-                                      context, Principalshell.routeName);
+                                  
+                                  // Fetch user data after successful login
+                                  final userData = await fetchUserData();
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Principalshell(userData: userData),
+                                    ),
+                                  );
                                 } catch (e) {
                                   print(e);
                                 }

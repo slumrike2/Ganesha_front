@@ -34,7 +34,10 @@ class MainApp extends StatelessWidget {
       routes: {
         RegisterShell.routeName: (context) => RegisterShell(),
         LoginPage.routeName: (context) => LoginPage(),
-        Principalshell.routeName: (context) => Principalshell(),
+        Principalshell.routeName: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as GaneshaUser;
+          return Principalshell(userData: args);
+        },
         TestPage.routeName: (context) {
           final args = ModalRoute.of(context)!.settings.arguments;
           if (args is List<Sintoma>) {

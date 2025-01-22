@@ -4,10 +4,13 @@ import 'package:ganesha_frontend/Pages/PrincipalPages/home_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/music_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/stadistics_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
+import 'package:ganesha_frontend/dartTypes.dart';
 
 class Principalshell extends StatefulWidget {
   static final String routeName = '/principal';
-  const Principalshell({super.key});
+  final GaneshaUser userData;
+
+  const Principalshell({super.key, required this.userData});
 
   @override
   State<Principalshell> createState() => _PrincipalshellState();
@@ -16,12 +19,18 @@ class Principalshell extends StatefulWidget {
 class _PrincipalshellState extends State<Principalshell> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    HomePage(),
-    FriendsPage(),
-    MusicPage(),
-    StadisticsPage(),
-  ];
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomePage(userData: widget.userData),
+      FriendsPage(),
+      MusicPage(),
+      StadisticsPage(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +89,7 @@ class _PrincipalshellState extends State<Principalshell> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hola, Juan',
+                  Text('Hola, ${widget.userData.nombre}',
                       style: TextStyle(fontSize: 32, color: Colors.white)),
                   Row(
                     spacing: 8,
@@ -91,7 +100,7 @@ class _PrincipalshellState extends State<Principalshell> {
                         size: 25,
                       ),
                       Text(
-                        '500',
+                        widget.userData.puntaje,
                         style: TextStyle(fontSize: 24, color: Colors.white),
                       ),
                     ],
