@@ -69,16 +69,51 @@ class _TestPageState extends State<TestPage> {
                           padding: EdgeInsets.all(16),
                           child: SingleChildScrollView(
                             child: Column(
-                              children: snapshot.data!
-                                  .map((sintoma) {
-                                    final symptomTest = SymptomTest(data: sintoma);
-                                    _symptomTests.add(symptomTest);
-                                    return Container(
-                                      margin: EdgeInsets.symmetric(vertical: 8.0),
-                                      child: symptomTest,
-                                    );
-                                  })
-                                  .toList(),
+                              children: snapshot.data!.map((sintoma) {
+                                final symptomTest = SymptomTest(data: sintoma);
+                                _symptomTests.add(symptomTest);
+                                return Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              sintoma.nombre,
+                                              style: TextStyle(fontSize: 18, color: Colors.white),
+                                            ),
+                                          ),
+                                          StatefulBuilder(
+                                            builder: (BuildContext context, StateSetter setState) {
+                                              return Checkbox(
+                                                value: symptomTest.isChecked(),
+                                                onChanged: (bool? value) {
+                                                  setState(() {
+                                                    symptomTest.setChecked(value!);
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(color: Colors.white),
+                                      Text(
+                                        sintoma.descripcion,
+                                        style: TextStyle(fontSize: 14, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ),
@@ -112,8 +147,8 @@ class _TestPageState extends State<TestPage> {
 
   // HTTP Requests for Symptoms
   Future<List<Sintoma>> getSymptom() async {
-    final responseSymptom =
-        await http.get(Uri.parse('${dotenv.env['API_URL']}/symptoms/'), headers: {
+    final responseSymptom = await http
+        .get(Uri.parse('${dotenv.env['API_URL']}/symptoms/'), headers: {
       'Content-Type': 'application/json',
       'Authorization': '${dotenv.env['API_KEY']}',
     });
@@ -134,13 +169,16 @@ class _TestPageState extends State<TestPage> {
     SupabaseClient supabase = Supabase.instance.client;
 
     final responseCheckedSymptoms =
-        await http.post(Uri.parse('${dotenv.env['API_URL']}/tests/submit'), headers: {
-      'Content-Type': 'application/json',
-      'Authorization': '${dotenv.env['API_KEY']}',
-    }, body: jsonEncode({
-      'test': checkedSymptoms.map((symptom) => symptom.toJson()).toList(),
-      'user_uid': supabase.auth.currentSession?.user.id,
-    }));
+        await http.post(Uri.parse('${dotenv.env['API_URL']}/tests/submit'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': '${dotenv.env['API_KEY']}',
+            },
+            body: jsonEncode({
+              'test':
+                  checkedSymptoms.map((symptom) => symptom.toJson()).toList(),
+              'user_uid': supabase.auth.currentSession?.user.id,
+            }));
 
     if (responseCheckedSymptoms.statusCode != 200) {
       throw Exception('Failed to submit symptoms');

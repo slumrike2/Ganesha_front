@@ -1,7 +1,7 @@
 class Song {
   final int idCancion;
   final String titulo;
-  final String urlImg;
+  final String? urlImg;
   final int duracion;
   final int costePun;
   bool unloock;
@@ -9,7 +9,7 @@ class Song {
   Song({
     required this.idCancion,
     required this.titulo,
-    required this.urlImg,
+    this.urlImg,
     required this.duracion,
     required this.costePun,
     this.unloock = false,
@@ -36,7 +36,39 @@ class Song {
   }
 }
 
-class Ganesha_User {
+class EjercicioAsignadoUsuario {
+  final bool? done;
+  final int idEjercicio;
+  final String idUsuario;
+  final int? prioridad;
+
+  EjercicioAsignadoUsuario({
+    this.done,
+    required this.idEjercicio,
+    required this.idUsuario,
+    this.prioridad,
+  });
+
+  factory EjercicioAsignadoUsuario.fromJson(Map<String, dynamic> json) {
+    return EjercicioAsignadoUsuario(
+      done: json['done'],
+      idEjercicio: json['id_ejercicio'],
+      idUsuario: json['id_usuario'],
+      prioridad: json['prioridad'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'done': done,
+      'id_ejercicio': idEjercicio,
+      'id_usuario': idUsuario,
+      'prioridad': prioridad,
+    };
+  }
+}
+
+class GaneshaUser {
   final String idUsuario;
   final String nombre;
   final String apellido;
@@ -48,7 +80,7 @@ class Ganesha_User {
   final String tipoEntrada;
   final String username;
 
-  Ganesha_User({
+  GaneshaUser({
     required this.idUsuario,
     required this.nombre,
     required this.apellido,
@@ -61,8 +93,8 @@ class Ganesha_User {
     required this.username,
   });
 
-  factory Ganesha_User.fromJson(Map<String, dynamic> json) {
-    return Ganesha_User(
+  factory GaneshaUser.fromJson(Map<String, dynamic> json) {
+    return GaneshaUser(
       idUsuario: json['id_usuario'],
       nombre: json['nombre'],
       apellido: json['apellido'],
@@ -93,7 +125,7 @@ class Ganesha_User {
 }
 
 class Configuracion {
-  final int idConfiguracion;
+  final String idConfiguracion;
   final String idUsuario;
   final String idioma;
   final String notificaciones;
@@ -162,22 +194,19 @@ class Diagnostico {
 
 class Ejercicio {
   final int idEjercicio;
-  final String mecanica;
-  final String nivel;
+  final String descripcion;
   final String nombre;
 
   Ejercicio({
     required this.idEjercicio,
-    required this.mecanica,
-    required this.nivel,
+    required this.descripcion,
     required this.nombre,
   });
 
   factory Ejercicio.fromJson(Map<String, dynamic> json) {
     return Ejercicio(
       idEjercicio: json['id_ejercicio'],
-      mecanica: json['mecanica'],
-      nivel: json['nivel'],
+      descripcion: json['descripcion'],
       nombre: json['nombre'],
     );
   }
@@ -185,8 +214,7 @@ class Ejercicio {
   Map<String, dynamic> toJson() {
     return {
       'id_ejercicio': idEjercicio,
-      'mecanica': mecanica,
-      'nivel': nivel,
+      'descripcion': descripcion,
       'nombre': nombre,
     };
   }
@@ -272,11 +300,15 @@ class Sintoma {
   final int idSintoma;
   final String descripcion;
   final String nombre;
+  final String? pregunta;
+  final String? tipo;
 
   Sintoma({
     required this.idSintoma,
     required this.descripcion,
     required this.nombre,
+    this.pregunta,
+    this.tipo,
   });
 
   factory Sintoma.fromJson(Map<String, dynamic> json) {
@@ -284,6 +316,8 @@ class Sintoma {
       idSintoma: json['id_sintoma'],
       descripcion: json['descripcion'],
       nombre: json['nombre'],
+      pregunta: json['pregunta'],
+      tipo: json['tipo'],
     );
   }
 
@@ -292,6 +326,8 @@ class Sintoma {
       'id_sintoma': idSintoma,
       'descripcion': descripcion,
       'nombre': nombre,
+      'pregunta': pregunta,
+      'tipo': tipo,
     };
   }
 }
@@ -319,3 +355,5 @@ class Equipamiento {
     };
   }
 }
+
+

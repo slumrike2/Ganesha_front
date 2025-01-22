@@ -56,7 +56,7 @@ class MusicPage extends StatelessWidget {
     );
   }
 
-  Future<List<Song>> getSongs() async {
+Future<List<Song>> getSongs() async {
     final responseSongs =
         await http.get(Uri.parse('${dotenv.env['API_URL']}/songs'), headers: {
       'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ class MusicPage extends StatelessWidget {
 
     final responseUserSongs = await http.get(
         Uri.parse(
-            '${dotenv.env['API_URL']}/user/songs/${supabase.auth.currentSession?.user.id}'),
+            '${dotenv.env['API_URL']}/user/songs/${supabase.auth.currentSession!.user.id}'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': '${dotenv.env['API_KEY']}',

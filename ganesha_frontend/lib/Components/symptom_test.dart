@@ -13,6 +13,10 @@ class SymptomTest extends StatefulWidget {
   bool isChecked() {
     return checked;
   }
+
+  void setChecked(bool value) {
+    checked = value;
+  }
 }
 
 class _SymptomTestState extends State<SymptomTest> {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ganesha_frontend/Components/exercise_preview.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
+import 'package:ganesha_frontend/Pages/PrincipalPages/exercise_list_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -105,6 +106,14 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(fontSize: 32, color: Colors.white),
                 textAlign: TextAlign.center,
               )),
+          Container(
+            width: double.infinity,
+            child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, ExerciseListPage.routeName);
+                },
+                child: Text('Ver Ejercicios')),
+          ),
           Expanded(
             child: GridView.builder(
               clipBehavior: Clip.none,
@@ -114,7 +123,7 @@ class HomePage extends StatelessWidget {
                 mainAxisSpacing: 16,
               ),
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: 4, // Show a preview of 4 exercises
               itemBuilder: (context, index) {
                 return ExercisePreview();
               },

@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\url_launcher_windows_plugin.dir/objects.a
+C:\MinGW\bin\ar.exe qc CMakeFiles\url_launcher_windows_plugin.dir/objects.a @CMakeFiles\url_launcher_windows_plugin.dir\objects1.rsp
+C:\MinGW\bin\c++.exe -g -shared -o liburl_launcher_windows_plugin.dll -Wl,--out-implib,liburl_launcher_windows_plugin.dll.a -Wl,--major-image-version,0,--minor-image-version,0 -Wl,--whole-archive CMakeFiles\url_launcher_windows_plugin.dir/objects.a -Wl,--no-whole-archive @CMakeFiles\url_launcher_windows_plugin.dir\linkLibs.rsp

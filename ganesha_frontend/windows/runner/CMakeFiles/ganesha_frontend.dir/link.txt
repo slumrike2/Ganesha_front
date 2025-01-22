@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\ganesha_frontend.dir/objects.a
+C:\MinGW\bin\ar.exe qc CMakeFiles\ganesha_frontend.dir/objects.a @CMakeFiles\ganesha_frontend.dir\objects1.rsp
+C:\MinGW\bin\c++.exe -g -mwindows -Wl,--whole-archive CMakeFiles\ganesha_frontend.dir/objects.a -Wl,--no-whole-archive -o ganesha_frontend.exe -Wl,--out-implib,libganesha_frontend.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\ganesha_frontend.dir\linkLibs.rsp
