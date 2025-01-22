@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'audio_controller.dart';
 
 class MusicPreview extends StatelessWidget {
   const MusicPreview(
@@ -17,6 +19,7 @@ class MusicPreview extends StatelessWidget {
     )..layout(maxWidth: MediaQuery.of(context).size.width - 100);
 
     final isOverflowing = textPainter.didExceedMaxLines;
+    final AudioPlayer _audioPlayer = AudioPlayer(); 
 
     return Container(
         decoration: BoxDecoration(
@@ -77,7 +80,10 @@ class MusicPreview extends StatelessWidget {
             if (unloock)
               IconButton(
                 icon: Icon(Icons.play_arrow, color: Colors.white),
-                onPressed: () {},
+                onPressed: () async {
+                    var path = 'audio/${title}.mp3';
+                    await AudioController().play(AssetSource(path));
+                },
               ),
           ],
         ));
