@@ -304,14 +304,14 @@ class Sintoma {
   final String descripcion;
   final String nombre;
   final String pregunta;
-  final String? tipo;
+  final String tipo;
 
   Sintoma({
     required this.idSintoma,
     required this.descripcion,
     required this.nombre,
     required this.pregunta,
-    this.tipo,
+    required this.tipo,
   });
 
   factory Sintoma.fromJson(Map<String, dynamic> json) {

@@ -4,6 +4,7 @@ import 'package:ganesha_frontend/Pages/login_page.dart';
 import 'package:ganesha_frontend/Shells/principal_shell.dart';
 import 'package:ganesha_frontend/Shells/register_shell.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ganesha_frontend/dartTypes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/exercise_list_page.dart';
 
@@ -34,8 +35,22 @@ class MainApp extends StatelessWidget {
         RegisterShell.routeName: (context) => RegisterShell(),
         LoginPage.routeName: (context) => LoginPage(),
         Principalshell.routeName: (context) => Principalshell(),
-        TestPage.routeName: (context) => TestPage(),
-        ExerciseListPage.routeName: (context) => ExerciseListPage(),
+        TestPage.routeName: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments;
+          if (args is List<Sintoma>) {
+            return TestPage(symptoms: args);
+          } else {
+            throw Exception('Invalid arguments for TestPage');
+          }
+        },
+        ExerciseListPage.routeName: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments;
+          if (args is List<Ejercicio>) {
+            return ExerciseListPage(exercises: args);
+          } else {
+            throw Exception('Invalid arguments for ExerciseListPage');
+          }
+        },
       },
       initialRoute: RegisterShell.routeName,
     );

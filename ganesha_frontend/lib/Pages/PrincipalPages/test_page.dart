@@ -8,7 +8,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TestPage extends StatefulWidget {
   static final String routeName = '/test';
-  const TestPage({super.key});
+  final List<Sintoma> symptoms;
+
+  const TestPage({super.key, required this.symptoms});
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -16,10 +18,33 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   final List<SymptomTest> _symptomTests = [];
+  String _selectedType = 'All';
+  List<String> _types = ['All'];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.symptoms.forEach((sintoma) {
+      _symptomTests.add(SymptomTest(data: sintoma));
+      if (!_types.contains(sintoma.tipo)) {
+        _types.add(sintoma.tipo);
+      }
+    });
+  }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  List<SymptomTest> _filterSymptoms() {
+    if (_selectedType == 'All') {
+      return _symptomTests;
+    } else {
+      return _symptomTests
+          .where((symptomTest) => symptomTest.data.tipo == _selectedType)
+          .toList();
+    }
   }
 
   @override
@@ -55,71 +80,86 @@ class _TestPageState extends State<TestPage> {
                   style: TextStyle(fontSize: 32, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                FutureBuilder<List<Sintoma>>(
-                  future: getSymptom(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else {
-                      return Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: snapshot.data!.map((sintoma) {
-                                final symptomTest = SymptomTest(data: sintoma);
-                                _symptomTests.add(symptomTest);
-                                return Container(
-                                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                                  padding: EdgeInsets.all(16.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueGrey[50],
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              sintoma.pregunta,
-                                              style: TextStyle(fontSize: 18, color: Colors.black),
-                                            ),
-                                          ),
-                                          StatefulBuilder(
-                                            builder: (BuildContext context, StateSetter setState) {
-                                              return Checkbox(
-                                                value: symptomTest.isChecked(),
-                                                onChanged: (bool? value) {
-                                                  setState(() {
-                                                    symptomTest.setChecked(value!);
-                                                  });
-                                                },
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      Divider(color: Colors.grey),
-                                      Text(
-                                        sintoma.descripcion,
-                                        style: TextStyle(fontSize: 14, color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
+                SizedBox(height: 16),
+                Container(
+                  width: 200,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey[800],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedType,
+                      dropdownColor: Colors.blueGrey[800],
+                      style: TextStyle(color: Colors.white),
+                      items: _types.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedType = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: _filterSymptoms().map((symptomTest) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                            padding: EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.blueGrey[50],
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                          ),
-                        ),
-                      );
-                    }
-                  },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        symptomTest.data.pregunta,
+                                        style: TextStyle(fontSize: 18, color: Colors.black),
+                                      ),
+                                    ),
+                                    StatefulBuilder(
+                                      builder: (BuildContext context, StateSetter setState) {
+                                        return Checkbox(
+                                          value: symptomTest.isChecked(),
+                                          onChanged: (bool? value) {
+                                            setState(() {
+                                              symptomTest.setChecked(value!);
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Divider(color: Colors.grey),
+                                Text(
+                                  symptomTest.data.descripcion,
+                                  style: TextStyle(fontSize: 14, color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                     onPressed: () {
@@ -140,25 +180,6 @@ class _TestPageState extends State<TestPage> {
         ),
       ],
     );
-  }
-
-  // HTTP Requests for Symptoms
-  Future<List<Sintoma>> getSymptom() async {
-    final responseSymptom = await http
-        .get(Uri.parse('${dotenv.env['API_URL']}/symptoms/'), headers: {
-      'Content-Type': 'application/json',
-      'Authorization': '${dotenv.env['API_KEY']}',
-    });
-
-    if (responseSymptom.statusCode == 200) {
-      List<Sintoma> symptoms = [];
-      for (var symptom in jsonDecode(responseSymptom.body)) {
-        symptoms.add(Sintoma.fromJson(symptom));
-      }
-      return symptoms;
-    } else {
-      throw Exception('Failed to load symptoms');
-    }
   }
 
   // HTTP Requests for User Symptoms
