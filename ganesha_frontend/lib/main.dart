@@ -9,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/exercise_list_page.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
 
   final supabaseUrl = dotenv.get('SUPABASE_URL');

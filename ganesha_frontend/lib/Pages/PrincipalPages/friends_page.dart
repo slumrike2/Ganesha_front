@@ -26,11 +26,12 @@ class FriendsPage extends StatefulWidget {
 
 class _FriendsPageState extends State<FriendsPage> {
   List<Friend> friends = [];
+  late Future<void> _friendsFuture;
 
   @override
   void initState() {
     super.initState();
-    fetchFriends();
+    _friendsFuture = fetchFriends();
   }
 
   Future<void> fetchFriends() async {
@@ -93,36 +94,47 @@ class _FriendsPageState extends State<FriendsPage> {
                 ),
                 SizedBox(height: 16),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: friends.length,
-                    itemBuilder: (context, index) {
-                      final friend = friends[index];
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8), // Adjusted margin
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 5,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Adjusted padding
-                          leading: UserAvatar(name: friend.name), // Added UserAvatar
-                          title: Text(
-                            friend.name,
-                            style: TextStyle(fontSize: 20, color: Colors.black), // Adjusted font size and color
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.monetization_on, color: Colors.yellow),
-                              SizedBox(width: 4),
-                              Text(
-                                '${friend.score}',
-                                style: TextStyle(fontSize: 20, color: Colors.black), // Adjusted font size and color
+                  child: FutureBuilder<void>(
+                    future: _friendsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error loading friends'));
+                      } else {
+                        return ListView.builder(
+                          itemCount: friends.length,
+                          itemBuilder: (context, index) {
+                            final friend = friends[index];
+                            return Card(
+                              margin: EdgeInsets.symmetric(vertical: 8), // Adjusted margin
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ],
-                          ),
-                        ),
-                      );
+                              elevation: 5,
+                              child: ListTile(
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Adjusted padding
+                                leading: UserAvatar(name: friend.name), // Added UserAvatar
+                                title: Text(
+                                  friend.name,
+                                  style: TextStyle(fontSize: 20, color: Colors.black), // Adjusted font size and color
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.monetization_on, color: Colors.yellow),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '${friend.score}',
+                                      style: TextStyle(fontSize: 20, color: Colors.black), // Adjusted font size and color
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
                     },
                   ),
                 ),
