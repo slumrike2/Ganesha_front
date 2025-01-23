@@ -126,6 +126,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     child: InfoBox(
                       title: 'Racha',
                       value: '5 días',
+                      size: InfoBoxSize.medium,
                     ),
                   ),
                   SizedBox(width: 16),
@@ -133,11 +134,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     child: InfoBox(
                       title: 'Logros',
                       value: '20',
+                      size: InfoBoxSize.medium,
                     ),
                   ),
                 ],
               ),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: Text(
                   'Test Diario',
@@ -159,7 +161,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     : null,
                 child: Text('Comenzar Test'),
               ),
-              Container(
+              SizedBox(
+                height: 16,
+              ),
+              SizedBox(
                   width: double.infinity,
                   child: Text(
                     'Ejercicios',
@@ -182,7 +187,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ),
               InfoBox(
                 title: 'Ejercicios Pendientes',
-                value: '10', // Replace with actual data
+                value: '${exercises.length}', // Replace with actual data
+                size: InfoBoxSize.large,
               ),
             ],
           ),
@@ -192,20 +198,35 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 }
 
+enum InfoBoxSize { small, medium, large }
+
 class InfoBox extends StatelessWidget {
   final String title;
   final String value;
+  final InfoBoxSize size;
 
   const InfoBox({
     Key? key,
     required this.title,
     required this.value,
+    this.size = InfoBoxSize.medium,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width * 0.4;
-    final height = MediaQuery.of(context).size.height * 0.2;
+    double width;
+    switch (size) {
+      case InfoBoxSize.small:
+        width = MediaQuery.of(context).size.width * 0.3;
+        break;
+      case InfoBoxSize.large:
+        width = MediaQuery.of(context).size.width * 0.8;
+        break;
+      case InfoBoxSize.medium:
+        width = MediaQuery.of(context).size.width * 0.4;
+        break;
+    }
+    final height = MediaQuery.of(context).size.height * 0.15;
 
     return Container(
       width: width,

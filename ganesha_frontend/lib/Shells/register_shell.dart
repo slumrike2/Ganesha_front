@@ -5,6 +5,7 @@ import 'package:ganesha_frontend/Pages/Register/RegisterDataPage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterNamePage.dart';
 import 'package:ganesha_frontend/Pages/Register/RegisterSimtomsPage.dart';
 import 'package:ganesha_frontend/Shells/principal_shell.dart';
+import 'package:ganesha_frontend/dartTypes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -176,6 +177,22 @@ class _RegisterShellState extends State<RegisterShell> {
     }
   }
 
+  Future<GaneshaUser> fetchUserData(String userId) async {
+    final response = await http.get(
+      Uri.parse('${dotenv.env['API_URL']}/user/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${dotenv.env['API_KEY']}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return GaneshaUser.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load user data');
+    }
+  }
+
   register() async {
     try {
       final res = await supabase.auth
@@ -184,7 +201,13 @@ class _RegisterShellState extends State<RegisterShell> {
         final user = await addUser(res.user!.id, datos.name!, datos.lastName!,
             datos.username!, 1, 1, 'Email', datos.email!);
         if (user == 200) {
-          Navigator.pushReplacementNamed(context, Principalshell.routeName);
+          final userData = await fetchUserData(res.user!.id);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Principalshell(userData: userData),
+            ),
+          );
         } else {
           //!TODO: Show error message
           print('Error al crear usuario');
