@@ -86,8 +86,6 @@ class _FriendsPageState extends State<FriendsPage> {
         List<Friend> fetchedFriends = [];
         List<dynamic> userFriends = jsonDecode(responseUserFriends.body);
 
-        print(userFriends);
-
         for (var friend in userFriends) {
           fetchedFriends.add(Friend.fromJson(friend));
         }

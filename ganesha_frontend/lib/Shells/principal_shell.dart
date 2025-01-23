@@ -61,7 +61,6 @@ class _PrincipalshellState extends State<Principalshell> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       return GaneshaUser.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load user data');

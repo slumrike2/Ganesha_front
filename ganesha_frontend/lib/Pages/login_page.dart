@@ -31,7 +31,6 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       return GaneshaUser.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load user data');

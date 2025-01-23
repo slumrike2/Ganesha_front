@@ -139,7 +139,6 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
 
   validate() {
     if (_formKey.currentState!.saveAndValidate()) {
-      print(_formKey.currentState!.value);
     }
   }
 }

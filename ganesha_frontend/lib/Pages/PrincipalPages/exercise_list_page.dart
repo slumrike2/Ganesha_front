@@ -40,7 +40,6 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
     );
 
     if (response.statusCode == 200) {
-      print('Exercise marked as done');
       setState(() {
         _exercises
             .removeWhere((exercise) => exercise.idEjercicio == exerciseId);
