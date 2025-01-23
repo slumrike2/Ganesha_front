@@ -13,12 +13,14 @@ class MusicPreview extends StatefulWidget {
   final String title;
   final bool unloock;
   final int price;
+  final int songId;
 
   const MusicPreview({
     Key? key,
     required this.title,
     required this.unloock,
     required this.price,
+    required this.songId,
   }) : super(key: key);
 
   @override
@@ -29,7 +31,7 @@ class _MusicPreviewState extends State<MusicPreview> {
   static _MusicPreviewState? activeInstance;
   bool isPlaying = false;
   bool showFriends = false;
-  List<String> friends = [];
+  List<Map<String, String>> friends = [];
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
@@ -48,10 +50,13 @@ class _MusicPreviewState extends State<MusicPreview> {
           'Authorization': '${dotenv.env['API_KEY']}',
         },
       );
-
+      print(response.body);
       if (response.statusCode == 200) {
         List<dynamic> friendsJson = jsonDecode(response.body);
-        List<String> fetchedFriends = friendsJson.map((friend) => friend['username'] as String).toList();
+        List<Map<String, String>> fetchedFriends = friendsJson.map((friend) => {
+          'id_amigo': friend['idUsuario'] as String,
+          'username': friend['username'] as String,
+        }).toList();
         if (mounted) {
           setState(() {
             friends = fetchedFriends;
@@ -107,11 +112,15 @@ class _MusicPreviewState extends State<MusicPreview> {
     }
   }
 
-  void _navigateToGiftConfirmation(BuildContext context, String friendName) {
+  void _navigateToGiftConfirmation(BuildContext context, String friendId, String friendName) {
+    final userId = Supabase.instance.client.auth.currentSession!.user.id;
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => GiftConfirmationPage(
+          userId: userId,
+          friendId: friendId,
+          songId: widget.songId.toString(),
           friendName: friendName,
           songTitle: widget.title,
         ),
@@ -210,8 +219,8 @@ class _MusicPreviewState extends State<MusicPreview> {
                 child: Row(
                   children: [
                     ...friendsToShow.map((friend) => GestureDetector(
-                      onTap: () => _navigateToGiftConfirmation(context, friend),
-                      child: UserAvatar(name: friend),
+                      onTap: () => _navigateToGiftConfirmation(context, friend['id_amigo']!, friend['username']!),
+                      child: UserAvatar(name: friend['username']!),
                     )).toList(),
                     if (remainingFriends > 0)
                       Padding(

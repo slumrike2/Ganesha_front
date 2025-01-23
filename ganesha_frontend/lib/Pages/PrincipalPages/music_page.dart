@@ -44,6 +44,7 @@ class MusicPage extends StatelessWidget {
                                           title: song.titulo,
                                           unloock: song.unloock,
                                           price: song.costePun,
+                                          songId: song.idCancion,
                                         ))
                                     .toList()),
                           ),
