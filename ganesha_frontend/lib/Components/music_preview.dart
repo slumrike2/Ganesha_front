@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'user_avatar.dart';
 import 'audio_controller.dart';
+import 'package:ganesha_frontend/Pages/PrincipalPages/gift_confirmation_page.dart';
 
 class MusicPreview extends StatefulWidget {
   final String title;
@@ -51,9 +52,11 @@ class _MusicPreviewState extends State<MusicPreview> {
       if (response.statusCode == 200) {
         List<dynamic> friendsJson = jsonDecode(response.body);
         List<String> fetchedFriends = friendsJson.map((friend) => friend['username'] as String).toList();
-        setState(() {
-          friends = fetchedFriends;
-        });
+        if (mounted) {
+          setState(() {
+            friends = fetchedFriends;
+          });
+        }
       } else {
         print('Failed to load friends');
       }
@@ -69,31 +72,51 @@ class _MusicPreviewState extends State<MusicPreview> {
       var path = 'audio/${widget.title}.mp3';
       await AudioController().play(AssetSource(path));
     }
-    setState(() {
-      isPlaying = !isPlaying;
-    });
+    if (mounted) {
+      setState(() {
+        isPlaying = !isPlaying;
+      });
+    }
   }
 
   void _toggleShowFriends() {
     if (activeInstance != null && activeInstance != this) {
-      activeInstance!.setState(() {
-        activeInstance!.showFriends = false;
-      });
+      if (activeInstance!.mounted) {
+        activeInstance!.setState(() {
+          activeInstance!.showFriends = false;
+        });
+      }
     }
 
     if (friends.isEmpty) {
       fetchFriends().then((_) {
+        if (mounted) {
+          setState(() {
+            showFriends = !showFriends;
+            activeInstance = showFriends ? this : null;
+          });
+        }
+      });
+    } else {
+      if (mounted) {
         setState(() {
           showFriends = !showFriends;
           activeInstance = showFriends ? this : null;
         });
-      });
-    } else {
-      setState(() {
-        showFriends = !showFriends;
-        activeInstance = showFriends ? this : null;
-      });
+      }
     }
+  }
+
+  void _navigateToGiftConfirmation(BuildContext context, String friendName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GiftConfirmationPage(
+          friendName: friendName,
+          songTitle: widget.title,
+        ),
+      ),
+    );
   }
 
   @override
@@ -182,11 +205,14 @@ class _MusicPreviewState extends State<MusicPreview> {
             ),
             if (showFriends)
               Positioned(
-                top: 0, // Adjusted position to center the icons in the given space
+                top: 0, // Reverted position to the original value
                 right: 0,
                 child: Row(
                   children: [
-                    ...friendsToShow.map((friend) => UserAvatar(name: friend)).toList(),
+                    ...friendsToShow.map((friend) => GestureDetector(
+                      onTap: () => _navigateToGiftConfirmation(context, friend),
+                      child: UserAvatar(name: friend),
+                    )).toList(),
                     if (remainingFriends > 0)
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
