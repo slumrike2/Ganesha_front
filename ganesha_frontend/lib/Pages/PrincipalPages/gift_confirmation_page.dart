@@ -21,7 +21,11 @@ class GiftConfirmationPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            UserAvatar(name: friendName),
+            Container(
+              width: 100.0, // Set the width for the larger avatar
+              height: 100.0, // Set the height for the larger avatar
+              child: UserAvatar(name: friendName),
+            ),
             SizedBox(height: 16),
             Text(
               '¿Quieres regalar "$songTitle" a $friendName?',
