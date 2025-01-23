@@ -19,7 +19,7 @@ class MusicPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Musica', style: TextStyle(fontSize: 32, color: Colors.white)),
+          Text('Música', style: TextStyle(fontSize: 32, color: Colors.white)),
           FutureBuilder<List<Song>>(
               future: getSongs(),
               builder: (context, snapshot) {
