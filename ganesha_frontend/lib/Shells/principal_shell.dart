@@ -100,7 +100,7 @@ class _PrincipalshellState extends State<Principalshell> {
                         size: 25,
                       ),
                       Text(
-                        widget.userData.puntaje,
+                        '${widget.userData.puntaje}',
                         style: TextStyle(fontSize: 24, color: Colors.white),
                       ),
                     ],

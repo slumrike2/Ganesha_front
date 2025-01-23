@@ -22,7 +22,8 @@ class _LoginPageState extends State<LoginPage> {
     SupabaseClient supabase = Supabase.instance.client;
 
     final response = await http.get(
-      Uri.parse('${dotenv.env['API_URL']}/user'),
+      Uri.parse(
+          '${dotenv.env['API_URL']}/user/${supabase.auth.currentUser!.id}'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '${dotenv.env['API_KEY']}',
@@ -30,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
+      print(response.body);
       return GaneshaUser.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load user data');
@@ -90,14 +92,17 @@ class _LoginPageState extends State<LoginPage> {
                                   await supabase.auth.signInWithPassword(
                                       email: aux['email'],
                                       password: aux['password']);
-                                  
+
                                   // Fetch user data after successful login
                                   final userData = await fetchUserData();
+
+                                 
 
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => Principalshell(userData: userData),
+                                      builder: (context) =>
+                                          Principalshell(userData: userData),
                                     ),
                                   );
                                 } catch (e) {

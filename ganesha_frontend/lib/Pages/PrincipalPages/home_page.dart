@@ -67,8 +67,10 @@ class _HomePageState extends State<HomePage> {
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
-      _cachedExercises = body.map((dynamic item) => Ejercicio.fromJson(item)).toList();
-      _cachedExercises!.sort((a, b) => b.prioridad.compareTo(a.prioridad)); // Sort by priority
+      _cachedExercises =
+          body.map((dynamic item) => Ejercicio.fromJson(item)).toList();
+      _cachedExercises!.sort(
+          (a, b) => b.prioridad.compareTo(a.prioridad)); // Sort by priority
       return _cachedExercises!;
     } else {
       throw Exception('Failed to load exercises');
@@ -101,22 +103,6 @@ class _HomePageState extends State<HomePage> {
             spacing: 8,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Welcome, $userName',
-                  style: TextStyle(fontSize: 32, color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  'Points: $userPoints',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

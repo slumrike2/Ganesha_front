@@ -73,7 +73,7 @@ class GaneshaUser {
   final String nombre;
   final String apellido;
   final String username;
-  final String puntaje;
+  final int puntaje;
   final int ejerciciosCompletados;
 
   GaneshaUser({
@@ -87,12 +87,12 @@ class GaneshaUser {
 
   factory GaneshaUser.fromJson(Map<String, dynamic> json) {
     return GaneshaUser(
-      idUsuario: json['idUsuario'],
+      idUsuario: json['id_usuario'],
       nombre: json['nombre'],
       apellido: json['apellido'],
       username: json['username'],
       puntaje: json['puntaje'],
-      ejerciciosCompletados: json['ejerciciosCompletados'],
+      ejerciciosCompletados: json['ejercicios_completados'],
     );
   }
 
