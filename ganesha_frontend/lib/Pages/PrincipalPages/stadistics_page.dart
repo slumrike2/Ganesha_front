@@ -71,7 +71,6 @@ class _StadisticsPageState extends State<StadisticsPage> {
             child: PageView(
               controller: _pageController,
               children: <Widget>[
-                Page1(),
                 Page2(data: 'some data'),
                 Page3(),
               ],
@@ -116,7 +115,6 @@ class Page1 extends StatelessWidget {
       child: Text('Contenido de la Semana',
           style: TextStyle(fontSize: 24, color: Colors.white)),
     );
-    
   }
 }
 

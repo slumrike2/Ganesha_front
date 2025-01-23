@@ -167,19 +167,22 @@ class _TestPageState extends State<TestPage> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                    onPressed: () async {
-                      final checkedSymptoms = _symptomTests
-                          .where((symptomTest) => symptomTest.isChecked())
-                          .map((symptomTest) => symptomTest.data)
-                          .toList();
+                Container(
+                  margin: EdgeInsets.only(bottom: 16),
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        final checkedSymptoms = _symptomTests
+                            .where((symptomTest) => symptomTest.isChecked())
+                            .map((symptomTest) => symptomTest.data)
+                            .toList();
 
-                      await submitCheckedSymptoms(checkedSymptoms);
-                      await widget.refetch();
-                      Navigator.pop(context, true);
-                      // Do something with checkedSymptoms
-                    },
-                    child: Text('Submit'))
+                        await submitCheckedSymptoms(checkedSymptoms);
+                        await widget.refetch();
+                        Navigator.pop(context, true);
+                        // Do something with checkedSymptoms
+                      },
+                      child: Text('Submit')),
+                )
               ],
             ),
           ),
