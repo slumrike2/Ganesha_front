@@ -11,11 +11,11 @@ import 'package:ganesha_frontend/Pages/PrincipalPages/gift_confirmation_page.dar
 
 class MusicPreview extends StatefulWidget {
   final String title;
-  final bool unloock;
+  bool unloock;
   final int price;
   final int songId;
 
-  const MusicPreview({
+  MusicPreview({
     Key? key,
     required this.title,
     required this.unloock,
@@ -53,10 +53,12 @@ class _MusicPreviewState extends State<MusicPreview> {
       print(response.body);
       if (response.statusCode == 200) {
         List<dynamic> friendsJson = jsonDecode(response.body);
-        List<Map<String, String>> fetchedFriends = friendsJson.map((friend) => {
-          'id_amigo': friend['idUsuario'] as String,
-          'username': friend['username'] as String,
-        }).toList();
+        List<Map<String, String>> fetchedFriends = friendsJson
+            .map((friend) => {
+                  'id_amigo': friend['idUsuario'] as String,
+                  'username': friend['username'] as String,
+                })
+            .toList();
         if (mounted) {
           setState(() {
             friends = fetchedFriends;
@@ -68,6 +70,73 @@ class _MusicPreviewState extends State<MusicPreview> {
     } catch (e) {
       print('Failed to load friends: $e');
     }
+  }
+
+  Future<void> purchaseSong() async {
+    try {
+      final response = await http.post(
+        Uri.parse('${dotenv.env['API_URL']}/user/songs/add'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': '${dotenv.env['API_KEY']}',
+        },
+        body: jsonEncode({
+          //       id_cancion: number;
+          // id_usuario: string;
+          // metodo_obtencion: number;
+          // veces_escuchada: number;
+          'id_cancion': widget.songId,
+          'id_usuario': Supabase.instance.client.auth.currentSession!.user.id,
+          'metodo_obtencion': 1,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          widget.unloock = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Canción comprada con éxito')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al comprar la canción')),
+        );
+      }
+    } catch (e) {
+      print('Failed to purchase song: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al comprar la canción')),
+      );
+    }
+  }
+
+  void _showPurchaseConfirmation() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmar compra'),
+          content:
+              Text('¿Deseas comprar esta canción por ${widget.price} monedas?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await purchaseSong();
+              },
+              child: Text('Comprar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _togglePlayPause() async {
@@ -112,7 +181,8 @@ class _MusicPreviewState extends State<MusicPreview> {
     }
   }
 
-  void _navigateToGiftConfirmation(BuildContext context, String friendId, String friendName) {
+  void _navigateToGiftConfirmation(
+      BuildContext context, String friendId, String friendName) {
     final userId = Supabase.instance.client.auth.currentSession!.user.id;
     Navigator.push(
       context,
@@ -146,7 +216,8 @@ class _MusicPreviewState extends State<MusicPreview> {
           clipBehavior: Clip.none,
           children: [
             Container(
-              margin: EdgeInsets.only(top: showFriends ? 50.0 : 16.0), // Adjust margin dynamically
+              margin: EdgeInsets.only(
+                  top: showFriends ? 50.0 : 16.0), // Adjust margin dynamically
               decoration: BoxDecoration(
                 color: widget.unloock
                     ? const Color.fromARGB(255, 137, 187, 211)
@@ -175,7 +246,8 @@ class _MusicPreviewState extends State<MusicPreview> {
                                   blankSpace: 80.0,
                                   pauseAfterRound: Duration(seconds: 25),
                                   velocity: 30.0,
-                                  startPadding: 0.0, // Ensure text starts from the beginning
+                                  startPadding:
+                                      0.0, // Ensure text starts from the beginning
                                 ),
                               )
                             : Text(
@@ -192,19 +264,25 @@ class _MusicPreviewState extends State<MusicPreview> {
                               '${widget.price}',
                               style: TextStyle(color: Colors.white),
                             ),
-                            Icon(Icons.monetization_on, color: Colors.yellow),
+                            IconButton(
+                              onPressed: _showPurchaseConfirmation,
+                              icon: Icon(Icons.monetization_on,
+                                  color: Colors.yellow),
+                            ),
                           ],
                         ),
                       (!widget.unloock)
                           ? IconButton(
-                              onPressed: () {},
+                              onPressed: _showPurchaseConfirmation,
                               icon: Icon(Icons.lock_open, color: Colors.white))
                           : IconButton(
                               onPressed: _toggleShowFriends,
-                              icon: Icon(Icons.card_giftcard_outlined, color: Colors.white)),
+                              icon: Icon(Icons.card_giftcard_outlined,
+                                  color: Colors.white)),
                       if (widget.unloock)
                         IconButton(
-                          icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white),
+                          icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
+                              color: Colors.white),
                           onPressed: _togglePlayPause,
                         ),
                     ],
@@ -218,10 +296,13 @@ class _MusicPreviewState extends State<MusicPreview> {
                 right: 0,
                 child: Row(
                   children: [
-                    ...friendsToShow.map((friend) => GestureDetector(
-                      onTap: () => _navigateToGiftConfirmation(context, friend['id_amigo']!, friend['username']!),
-                      child: UserAvatar(name: friend['username']!),
-                    )).toList(),
+                    ...friendsToShow
+                        .map((friend) => GestureDetector(
+                              onTap: () => _navigateToGiftConfirmation(context,
+                                  friend['id_amigo']!, friend['username']!),
+                              child: UserAvatar(name: friend['username']!),
+                            ))
+                        .toList(),
                     if (remainingFriends > 0)
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),

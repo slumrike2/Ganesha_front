@@ -29,7 +29,11 @@ class MusicPage extends StatelessWidget {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
                   final songs = snapshot.data!;
-                  songs.sort((a, b) => b.unloock ? 1 : -1);
+                  songs.sort((a, b) {
+                    if (a.unloock && !b.unloock) return -1;
+                    if (!a.unloock && b.unloock) return 1;
+                    return a.costePun.compareTo(b.costePun);
+                  });
                   return Expanded(
                     child: Container(
                       padding: EdgeInsets.all(32),
