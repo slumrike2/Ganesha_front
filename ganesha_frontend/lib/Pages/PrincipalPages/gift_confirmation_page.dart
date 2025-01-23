@@ -47,51 +47,81 @@ class GiftConfirmationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Confirm Gift'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 100.0, // Set the width for the larger avatar
-              height: 100.0, // Set the height for the larger avatar
-              child: CircleAvatar(
-                radius: 50.0,
-                child: Text(
-                  friendName[0].toUpperCase(), // Display the first letter of the name in uppercase
-                  style: TextStyle(fontSize: 60.0), // Larger font size for the character
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              '¿Quieres regalar "$songTitle" a $friendName?',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14), // Smaller font size for the text
-            ),
-            SizedBox(height: 32),
-            Row(
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset(
+            'assets/fondo.jpg', // Replace with your image path
+            fit: BoxFit.cover,
+            color: Colors.black.withAlpha(100), // Corrected method
+            colorBlendMode: BlendMode.darken,
+          ),
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: Text('Confirm Gift'),
+            backgroundColor: Colors.transparent, // Make AppBar background transparent
+            elevation: 0, // Remove AppBar shadow
+          ),
+          body: Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () => _confirmGift(context),
-                  child: Text('Confirmar'),
+                SizedBox(
+                  width: 100.0, // Set the width for the larger avatar
+                  height: 100.0, // Set the height for the larger avatar
+                  child: CircleAvatar(
+                    radius: 50.0,
+                    backgroundColor: Colors.blue, // Use a custom color for the avatar background
+                    child: Text(
+                      friendName[0].toUpperCase(), // Display the first letter of the name in uppercase
+                      style: TextStyle(
+                        fontSize: 60.0, // Larger font size for the character
+                        color: Colors.white, // Ensure the text color is white
+                      ),
+                    ),
+                  ),
                 ),
-                SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancelar'),
+                SizedBox(height: 16),
+                Text(
+                  '¿Quieres regalar "$songTitle" a $friendName?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white, // Ensure the text color is white
+                  ),
+                ),
+                SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _confirmGift(context),
+                      child: Text('Confirmar'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white, // Set button background to white
+                        foregroundColor: Colors.purple, // Set button text color to purple
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Cancelar'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white, // Set button background to white
+                        foregroundColor: Colors.purple, // Set button text color to purple
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
