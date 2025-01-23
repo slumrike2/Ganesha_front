@@ -3,12 +3,52 @@ import 'package:ganesha_frontend/dartTypes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ExerciseListPage extends StatelessWidget {
+class ExerciseListPage extends StatefulWidget {
   static final String routeName = '/exercises';
   final List<Ejercicio> exercises;
 
   const ExerciseListPage({super.key, required this.exercises});
+
+  @override
+  _ExerciseListPageState createState() => _ExerciseListPageState();
+}
+
+class _ExerciseListPageState extends State<ExerciseListPage> {
+  late List<Ejercicio> _exercises;
+
+  @override
+  void initState() {
+    super.initState();
+    _exercises = widget.exercises;
+  }
+
+  Future<void> markExerciseAsDone(int exerciseId) async {
+    SupabaseClient supabase = Supabase.instance.client;
+
+    final response = await http.post(
+      Uri.parse('${dotenv.env['API_URL']}/tests/mark_done'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${dotenv.env['API_KEY']}',
+      },
+      body: jsonEncode({
+        'id_usuario': supabase.auth.currentUser!.id,
+        'id_ejercicio': exerciseId
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Exercise marked as done');
+      setState(() {
+        _exercises
+            .removeWhere((exercise) => exercise.idEjercicio == exerciseId);
+      });
+    } else {
+      throw Exception('Failed to mark exercise as done');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,49 +82,34 @@ class ExerciseListPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: exercises.length,
-                    itemBuilder: (context, index) {
-                      final exercise = exercises[index];
-                      return Container(
-                        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                        padding: EdgeInsets.all(16.0),
-                        decoration: BoxDecoration(
-                          color: Colors.blueGrey[50]?.withOpacity(0.8),
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    exercise.nombre,
-                                    style: TextStyle(fontSize: 18, color: Colors.black),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    await markExerciseAsDone(exercise.idEjercicio);
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: Text('Done'),
-                                ),
-                              ],
+                  child: _exercises.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              'No hay más ejercicios, \n¡continúa así!',
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            Divider(color: Colors.grey),
-                            Text(
-                              exercise.descripcion,
-                              style: TextStyle(fontSize: 14, color: Colors.black),
-                            ),
-                          ],
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: _exercises.length,
+                          itemBuilder: (context, index) {
+                            final exercise = _exercises[index];
+                            return ExerciseItem(
+                              exercise: exercise,
+                              onDone: () async {
+                                await markExerciseAsDone(exercise.idEjercicio);
+                              },
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             ),
@@ -93,21 +118,53 @@ class ExerciseListPage extends StatelessWidget {
       ],
     );
   }
+}
 
-  Future<void> markExerciseAsDone(int exerciseId) async {
-    final response = await http.post(
-      Uri.parse('${dotenv.env['API_URL']}/exercises/mark_done'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': '${dotenv.env['API_KEY']}',
-      },
-      body: jsonEncode({'exercise_id': exerciseId}),
+class ExerciseItem extends StatelessWidget {
+  final Ejercicio exercise;
+  final VoidCallback onDone;
+
+  const ExerciseItem({
+    super.key,
+    required this.exercise,
+    required this.onDone,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.blueGrey[50],
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  exercise.nombre,
+                  style: TextStyle(fontSize: 18, color: Colors.black),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: onDone,
+                child: Text('Done'),
+              ),
+            ],
+          ),
+          Divider(color: Colors.grey),
+          Text(
+            exercise.descripcion,
+            style: TextStyle(fontSize: 14, color: Colors.black),
+          ),
+        ],
+      ),
     );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to mark exercise as done');
-    } else {
-      print('Exercise marked as done');
-    }
   }
 }
