@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/friends_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/home_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/music_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/stadistics_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
 import 'package:ganesha_frontend/dartTypes.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class Principalshell extends StatefulWidget {
   static final String routeName = '/principal';
@@ -18,18 +23,49 @@ class Principalshell extends StatefulWidget {
 
 class _PrincipalshellState extends State<Principalshell> {
   int _selectedIndex = 0;
-
   late final List<Widget> _pages;
+  late GaneshaUser _userData;
+
+  Future<void> _refetchUserData() async {
+    final userData = await fetchUserData();
+    setState(() {
+      _userData = userData;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _userData = widget.userData;
     _pages = [
-      HomePage(userData: widget.userData),
+      HomePage(
+        userData: _userData,
+        refetchUserData: _refetchUserData,
+      ),
       FriendsPage(),
       MusicPage(),
       StadisticsPage(),
     ];
+  }
+
+  Future<GaneshaUser> fetchUserData() async {
+    SupabaseClient supabase = Supabase.instance.client;
+
+    final response = await http.get(
+      Uri.parse(
+          '${dotenv.env['API_URL']}/user/${supabase.auth.currentUser!.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${dotenv.env['API_KEY']}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return GaneshaUser.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load user data');
+    }
   }
 
   @override
@@ -58,7 +94,7 @@ class _PrincipalshellState extends State<Principalshell> {
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white.withAlpha(110),
             showUnselectedLabels: false,
-            onTap: (index) {
+            onTap: (index) async {
               setState(() {
                 _selectedIndex = index;
               });
@@ -89,7 +125,7 @@ class _PrincipalshellState extends State<Principalshell> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hola, ${widget.userData.nombre}',
+                  Text('Hola, ${_userData.nombre}',
                       style: TextStyle(fontSize: 32, color: Colors.white)),
                   Row(
                     spacing: 8,
@@ -100,7 +136,7 @@ class _PrincipalshellState extends State<Principalshell> {
                         size: 25,
                       ),
                       Text(
-                        '${widget.userData.puntaje}',
+                        '${_userData.puntaje}',
                         style: TextStyle(fontSize: 24, color: Colors.white),
                       ),
                     ],

@@ -10,16 +10,37 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
   final GaneshaUser userData;
+  final Function refetchUserData;
 
-  const HomePage({super.key, required this.userData});
+  const HomePage(
+      {super.key, required this.userData, required this.refetchUserData});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   static List<Sintoma>? _cachedSymptoms;
   static List<Ejercicio>? _cachedExercises;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshData();
+    }
+  }
 
   Future<List<dynamic>> fetchData() async {
     final symptomsFuture = fetchSymptoms();
@@ -86,11 +107,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final sizew = MediaQuery.of(context).size.width;
-    final sizeh = MediaQuery.of(context).size.height;
-    final userName = widget.userData.nombre;
-    final userPoints = widget.userData.puntaje;
-
     return FutureBuilder<List<dynamic>>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -135,8 +151,9 @@ class _HomePageState extends State<HomePage> {
                         await Navigator.pushNamed(
                           context,
                           TestPage.routeName,
-                          arguments: symptoms,
+                          arguments: [symptoms, widget.refetchUserData],
                         );
+                        widget.refetchUserData();
                         _refreshData();
                       }
                     : null,
@@ -157,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                           ExerciseListPage.routeName,
                           arguments: exercises,
                         );
+                        widget.refetchUserData();
                         _refreshData();
                       }
                     : null,

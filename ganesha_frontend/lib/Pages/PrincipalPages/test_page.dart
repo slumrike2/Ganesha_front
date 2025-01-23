@@ -8,9 +8,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TestPage extends StatefulWidget {
   static final String routeName = '/test';
+  final Function refetch;
   final List<Sintoma> symptoms;
 
-  const TestPage({super.key, required this.symptoms});
+  const TestPage({super.key, required this.symptoms, required this.refetch});
 
   @override
   State<TestPage> createState() => _TestPageState();
@@ -115,7 +116,8 @@ class _TestPageState extends State<TestPage> {
                       child: Column(
                         children: _filterSymptoms().map((symptomTest) {
                           return Container(
-                            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
                             padding: EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
                               color: Colors.blueGrey[50],
@@ -126,16 +128,19 @@ class _TestPageState extends State<TestPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Text(
                                         symptomTest.data.pregunta,
-                                        style: TextStyle(fontSize: 18, color: Colors.black),
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.black),
                                       ),
                                     ),
                                     StatefulBuilder(
-                                      builder: (BuildContext context, StateSetter setState) {
+                                      builder: (BuildContext context,
+                                          StateSetter setState) {
                                         return Checkbox(
                                           value: symptomTest.isChecked(),
                                           onChanged: (bool? value) {
@@ -151,7 +156,8 @@ class _TestPageState extends State<TestPage> {
                                 Divider(color: Colors.grey),
                                 Text(
                                   symptomTest.data.descripcion,
-                                  style: TextStyle(fontSize: 14, color: Colors.black),
+                                  style: TextStyle(
+                                      fontSize: 14, color: Colors.black),
                                 ),
                               ],
                             ),
@@ -169,6 +175,7 @@ class _TestPageState extends State<TestPage> {
                           .toList();
 
                       await submitCheckedSymptoms(checkedSymptoms);
+                      await widget.refetch();
                       Navigator.pop(context, true);
                       // Do something with checkedSymptoms
                     },

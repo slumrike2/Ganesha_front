@@ -36,13 +36,16 @@ class MainApp extends StatelessWidget {
         RegisterShell.routeName: (context) => RegisterShell(),
         LoginPage.routeName: (context) => LoginPage(),
         Principalshell.routeName: (context) {
-          final args = ModalRoute.of(context)!.settings.arguments as GaneshaUser;
+          final args =
+              ModalRoute.of(context)!.settings.arguments as GaneshaUser;
           return Principalshell(userData: args);
         },
         TestPage.routeName: (context) {
           final args = ModalRoute.of(context)!.settings.arguments;
-          if (args is List<Sintoma>) {
-            return TestPage(symptoms: args);
+          if (args is List) {
+            final symptoms = args[0] as List<Sintoma>;
+            final refetch = args[1] as Function;
+            return TestPage(symptoms: symptoms, refetch: refetch);
           } else {
             throw Exception('Invalid arguments for TestPage');
           }
