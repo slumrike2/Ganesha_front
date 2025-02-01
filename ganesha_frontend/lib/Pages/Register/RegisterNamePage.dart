@@ -72,7 +72,7 @@ class _RegisterNamePageState extends State<RegisterNamePage> {
                           decoration: InputDecoration(labelText: 'Nombre'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese su nombre';
+                              return 'Por favor ingresa tu nombre';
                             }
                             return null;
                           },
@@ -83,7 +83,7 @@ class _RegisterNamePageState extends State<RegisterNamePage> {
                           decoration: InputDecoration(labelText: 'Apellido'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese su apellido';
+                              return 'Por favor ingresa tu apellido';
                             }
                             return null;
                           },

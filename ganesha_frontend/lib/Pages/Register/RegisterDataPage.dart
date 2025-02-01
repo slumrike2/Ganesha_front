@@ -78,7 +78,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
                 )),
                 Center(
                   child: Text(
-                    'Por favor ingrese sus datos personales',
+                    'Por favor ingresa tus datos personales',
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
@@ -88,7 +88,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
                   decoration: InputDecoration(labelText: 'Usuario'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su Usuario';
+                      return 'Por favor ingresa tu Usuario';
                     }
                     return null;
                   },
@@ -99,7 +99,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
                   decoration: InputDecoration(labelText: 'Correo'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su Correo';
+                      return 'Por favor ingresa tu Correo';
                     }
                     return null;
                   },
@@ -110,7 +110,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
                     decoration: InputDecoration(labelText: 'Contraseña'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese su Contraseña';
+                        return 'Por favor ingresa tu Contraseña';
                       }
 
                       return null;
@@ -122,7 +122,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
                         InputDecoration(labelText: 'Confirmar Contraseña'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese su Contraseña';
+                        return 'Por favor ingresa tu Contraseña';
                       }
                       if (value != _formKey.currentState!.value['password']) {
                         return 'Las contraseñas no coinciden';
