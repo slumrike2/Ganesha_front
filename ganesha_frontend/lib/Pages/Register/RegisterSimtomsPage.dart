@@ -22,7 +22,7 @@ class RegisterSimtomsPage extends StatelessWidget {
             )),
             Center(
               child: Text(
-                'Por favor ingrese sus síntomas',
+                'Por favor ingresa tus síntomas',
                 style: TextStyle(fontSize: 16),
               ),
             )
