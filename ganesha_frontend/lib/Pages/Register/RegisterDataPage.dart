@@ -85,7 +85,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
                 FormBuilderTextField(
                   name: 'username',
                   controller: _usernameController,
-                  decoration: InputDecoration(labelText: 'Username'),
+                  decoration: InputDecoration(labelText: 'Usuario'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Por favor ingrese su Usuario';
@@ -122,7 +122,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
                         InputDecoration(labelText: 'Confirmar Contraseña'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese su Telefono';
+                        return 'Por favor ingrese su Contraseña';
                       }
                       if (value != _formKey.currentState!.value['password']) {
                         return 'Las contraseñas no coinciden';

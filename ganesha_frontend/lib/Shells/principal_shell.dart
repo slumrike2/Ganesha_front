@@ -110,11 +110,11 @@ class _PrincipalshellState extends State<Principalshell> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.music_note),
-                label: 'Musica',
+                label: 'Música',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.bar_chart),
-                label: 'Estadisticas',
+                label: 'Estadísticas',
               ),
             ],
           ),

@@ -59,24 +59,24 @@ class _LoginPageState extends State<LoginPage> {
                           .center, // Changed from center to start
                       spacing: 20,
                       children: [
-                        Text('Inicio de Sesion?',
+                        Text('Inicio de Sesión',
                             style: TextStyle(fontSize: 32)),
                         FormBuilderTextField(
                           name: 'email',
-                          decoration: InputDecoration(labelText: 'Email'),
+                          decoration: InputDecoration(labelText: 'Correo'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese su Email';
+                              return 'Por favor ingrese su Correo';
                             }
                             return null;
                           },
                         ),
                         FormBuilderTextField(
                           name: 'password',
-                          decoration: InputDecoration(labelText: 'Password'),
+                          decoration: InputDecoration(labelText: 'Contraseña'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese su Password';
+                              return 'Por favor ingrese su Contraseña';
                             }
                             return null;
                           },
@@ -94,8 +94,6 @@ class _LoginPageState extends State<LoginPage> {
 
                                   // Fetch user data after successful login
                                   final userData = await fetchUserData();
-
-                                 
 
                                   Navigator.pushReplacement(
                                     context,
@@ -123,12 +121,12 @@ class _LoginPageState extends State<LoginPage> {
                 right: 0,
                 child: Column(
                   children: [
-                    Text('No tienes cuenta?'),
+                    Text('¿No tienes cuenta?'),
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('Registrate'),
+                      child: Text('Regístrate'),
                     ),
                   ],
                 ),

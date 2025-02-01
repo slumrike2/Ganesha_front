@@ -153,7 +153,7 @@ class ExerciseItem extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: onDone,
-                child: Text('Done'),
+                child: Text('Hecho'),
               ),
             ],
           ),

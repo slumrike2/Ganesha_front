@@ -31,7 +31,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // Remove debug banner
-      // Rutas necesarias para el funcionamiento de la navegacion en la app
+      // Rutas necesarias para el funcionamiento de la navegación en la app
       routes: {
         RegisterShell.routeName: (context) => RegisterShell(),
         LoginPage.routeName: (context) => LoginPage(),

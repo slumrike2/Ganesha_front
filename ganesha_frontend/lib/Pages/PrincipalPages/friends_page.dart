@@ -209,7 +209,7 @@ class _FriendsPageState extends State<FriendsPage> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return Center(child: Text('Error loading friends'));
+                        return Center(child: Text('Error al cargar amigos'));
                       } else {
                         final displayList =
                             isSearching ? searchResults : friends;
