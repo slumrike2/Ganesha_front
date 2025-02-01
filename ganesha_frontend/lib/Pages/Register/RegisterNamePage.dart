@@ -65,7 +65,7 @@ class _RegisterNamePageState extends State<RegisterNamePage> {
                           .center, // Changed from center to start
                       spacing: 20,
                       children: [
-                        Text('Como te llamas?', style: TextStyle(fontSize: 32)),
+                        Text('¿Cómo te llamas?', style: TextStyle(fontSize: 32)),
                         FormBuilderTextField(
                           name: 'name',
                           controller: _nameController,
@@ -97,12 +97,12 @@ class _RegisterNamePageState extends State<RegisterNamePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Ya tienes cuenta?'),
+                          Text('¿Ya tienes cuenta?'),
                           TextButton(
                             onPressed: () {
                               Navigator.pushNamed(context, LoginPage.routeName);
                             },
-                            child: Text('Inicia sesion'),
+                            child: Text('Inicia sesión'),
                           )
                         ],
                       ),

@@ -209,12 +209,12 @@ class _RegisterShellState extends State<RegisterShell> {
             ),
           );
         } else {
-          //!TODO: Show error message
+          //!TODO: Mostrar mensaje de error
           print('Error al crear usuario');
         }
       }
     } catch (e) {
-      //!TODO: Show error message
+      //!TODO: Mostrar mensaje de error
       print('Error: $e');
     }
   }

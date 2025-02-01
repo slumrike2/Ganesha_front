@@ -26,7 +26,7 @@ class _StadisticsPageState extends State<StadisticsPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         // Remove this line as it is not a valid property for Column
         children: [
-          Text('Estadisticas',
+          Text('Estadísticas',
               style: TextStyle(fontSize: 32, color: Colors.white)),
           ToggleButtons(
             fillColor: const Color.fromARGB(181, 103, 147, 243),

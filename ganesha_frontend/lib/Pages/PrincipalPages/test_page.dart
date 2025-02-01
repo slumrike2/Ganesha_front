@@ -77,7 +77,7 @@ class _TestPageState extends State<TestPage> {
             child: Column(
               children: [
                 Text(
-                  'Test de Sintomas',
+                  'Test de Síntomas',
                   style: TextStyle(fontSize: 32, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -181,7 +181,7 @@ class _TestPageState extends State<TestPage> {
                         Navigator.pop(context, true);
                         // Do something with checkedSymptoms
                       },
-                      child: Text('Submit')),
+                      child: Text('Enviar')),
                 )
               ],
             ),
@@ -210,7 +210,7 @@ class _TestPageState extends State<TestPage> {
     if (responseCheckedSymptoms.statusCode != 200) {
       throw Exception('Failed to submit symptoms');
     } else {
-      print('Symptoms submitted');
+      print('Síntomas enviados');
     }
   }
 }

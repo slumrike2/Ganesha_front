@@ -61,7 +61,6 @@ class _PrincipalshellState extends State<Principalshell> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
       return GaneshaUser.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load user data');
@@ -111,11 +110,11 @@ class _PrincipalshellState extends State<Principalshell> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.music_note),
-                label: 'Musica',
+                label: 'Música',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.bar_chart),
-                label: 'Estadisticas',
+                label: 'Estadísticas',
               ),
             ],
           ),
