@@ -10,11 +10,22 @@ class StadisticsPage extends StatefulWidget {
 class _StadisticsPageState extends State<StadisticsPage> {
   List<bool> isSelected = [true, false];
   PageController _pageController = PageController();
+  int _currentPage = 0;
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page?.round() ?? 0;
+      });
+    });
   }
 
   @override
@@ -24,7 +35,6 @@ class _StadisticsPageState extends State<StadisticsPage> {
       height: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        // Remove this line as it is not a valid property for Column
         children: [
           Text('Estadísticas',
               style: TextStyle(fontSize: 32, color: Colors.white)),
@@ -33,7 +43,6 @@ class _StadisticsPageState extends State<StadisticsPage> {
             borderRadius: BorderRadius.circular(8.0),
             isSelected: isSelected,
             onPressed: (int index) {
-              // Handle toggle logic here
               setState(() {
                 for (int i = 0; i < isSelected.length; i++) {
                   if (i == index) {
@@ -89,6 +98,21 @@ class _StadisticsPageState extends State<StadisticsPage> {
                       curve: Curves.easeInOut,
                     );
                   },
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.circle,
+                      color: _currentPage == 0 ? Colors.white : Colors.grey,
+                      size: 12,
+                    ),
+                    SizedBox(width: 8),
+                    Icon(
+                      Icons.circle,
+                      color: _currentPage == 1 ? Colors.white : Colors.grey,
+                      size: 12,
+                    ),
+                  ],
                 ),
                 IconButton(
                   icon: Icon(Icons.arrow_right, color: Colors.white),

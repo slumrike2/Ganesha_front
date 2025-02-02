@@ -160,117 +160,100 @@ class _FriendsPageState extends State<FriendsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/fondo.jpg',
-              fit: BoxFit.cover,
-              color: Colors.black.withAlpha(100),
-              colorBlendMode: BlendMode.darken,
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 16), // Adjusted padding
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'Amigos',
+                style: TextStyle(fontSize: 32, color: Colors.white),
+              ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16), // Adjusted padding
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Text(
-                    'Amigos',
-                    style: TextStyle(fontSize: 32, color: Colors.white),
-                  ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Buscar amigos...',
+                prefixIcon: Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
                 ),
-                SizedBox(height: 16),
-                TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Buscar amigos...',
-                    prefixIcon: Icon(Icons.search),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Tus amigos',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ),
-                SizedBox(height: 16),
-                Expanded(
-                  child: FutureBuilder<void>(
-                    future: _friendsFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error al cargar amigos'));
-                      } else {
-                        final displayList =
-                            isSearching ? searchResults : friends;
-                        return ListView.builder(
-                          itemCount: displayList.length,
-                          itemBuilder: (context, index) {
-                            final friend = displayList[index];
-                            return Card(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 8), // Adjusted margin
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              elevation: 5,
-                              child: ListTile(
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8), // Adjusted padding
-                                leading: UserAvatar(
-                                    name: friend.name), // Added UserAvatar
-                                title: Text(
-                                  friend.name,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors
-                                          .black), // Adjusted font size and color
-                                ),
-                                trailing: isSearching
-                                    ? IconButton(
-                                        icon: Icon(Icons.add,
-                                            color: Colors.green),
-                                        onPressed: () => addFriend(friend),
-                                      )
-                                    : Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(Icons.monetization_on,
-                                              color: Colors.yellow),
-                                          SizedBox(width: 4),
-                                          Text(
-                                            '${friend.score}',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors
-                                                    .black), // Adjusted font size and color
-                                          ),
-                                        ],
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Tus amigos',
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
+            SizedBox(height: 16),
+            Expanded(
+              child: FutureBuilder<void>(
+                future: _friendsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error al cargar amigos'));
+                  } else {
+                    final displayList = isSearching ? searchResults : friends;
+                    return ListView.builder(
+                      itemCount: displayList.length,
+                      itemBuilder: (context, index) {
+                        final friend = displayList[index];
+                        return Card(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 8), // Adjusted margin
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8), // Adjusted padding
+                            leading: UserAvatar(
+                                name: friend.name), // Added UserAvatar
+                            title: Text(
+                              friend.name,
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors
+                                      .black), // Adjusted font size and color
+                            ),
+                            trailing: isSearching
+                                ? IconButton(
+                                    icon: Icon(Icons.add, color: Colors.green),
+                                    onPressed: () => addFriend(friend),
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.monetization_on,
+                                          color: Colors.yellow),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        '${friend.score}',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors
+                                                .black), // Adjusted font size and color
                                       ),
-                              ),
-                            );
-                          },
+                                    ],
+                                  ),
+                          ),
                         );
-                      }
-                    },
-                  ),
-                ),
-              ],
+                      },
+                    );
+                  }
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 }

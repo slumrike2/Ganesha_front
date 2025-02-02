@@ -5,11 +5,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/friends_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/home_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/music_page.dart';
+import 'package:ganesha_frontend/Pages/PrincipalPages/settings_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/stadistics_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
 import 'package:ganesha_frontend/dartTypes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Principalshell extends StatefulWidget {
   static final String routeName = '/principal';
@@ -25,6 +27,7 @@ class _PrincipalshellState extends State<Principalshell> {
   int _selectedIndex = 0;
   late final List<Widget> _pages;
   late GaneshaUser _userData;
+  String backgroundImage = 'assets/fondo.jpg'; // Default background image
 
   Future<void> _refetchUserData() async {
     final userData = await fetchUserData();
@@ -36,6 +39,7 @@ class _PrincipalshellState extends State<Principalshell> {
   @override
   void initState() {
     super.initState();
+    _loadBackgroundImage();
     _userData = widget.userData;
     _pages = [
       HomePage(
@@ -46,6 +50,14 @@ class _PrincipalshellState extends State<Principalshell> {
       MusicPage(refetchUserData: _refetchUserData),
       StadisticsPage(),
     ];
+  }
+
+  Future<void> _loadBackgroundImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("fondo: " + (prefs.getString('fondo') ?? 'null'));
+    setState(() {
+      backgroundImage = prefs.getString('fondo') ?? 'assets/fondo.jpg';
+    });
   }
 
   Future<GaneshaUser> fetchUserData() async {
@@ -75,7 +87,7 @@ class _PrincipalshellState extends State<Principalshell> {
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/fondo.jpg', // Replace with your image path
+            backgroundImage, // Use the preferred background image
             fit: BoxFit.cover,
             color: Colors.black.withAlpha(100), // Corrected method
             colorBlendMode: BlendMode.darken,
@@ -138,7 +150,6 @@ class _PrincipalshellState extends State<Principalshell> {
                         '${_userData.puntaje}',
                         style: TextStyle(fontSize: 24, color: Colors.white),
                       ),
-                      
                     ],
                   ),
                 ],
@@ -152,13 +163,18 @@ class _PrincipalshellState extends State<Principalshell> {
               IconButton(
                 iconSize: 46,
                 padding: EdgeInsets.only(right: 16),
-                onPressed: () {},
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(
+                      context, SettingsPage.routeName);
+                  if (result == true) {
+                    _loadBackgroundImage(); // Reload background image
+                  }
+                },
                 icon: Icon(Icons.person_outline),
               ),
             ],
           ),
         ),
-       
       ],
     );
   }
