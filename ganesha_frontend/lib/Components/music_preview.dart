@@ -14,14 +14,16 @@ class MusicPreview extends StatefulWidget {
   bool unloock;
   final int price;
   final int songId;
+  final Future<void> Function() refetchUserData;
 
   MusicPreview({
-    Key? key,
+    super.key,
     required this.title,
     required this.unloock,
     required this.price,
     required this.songId,
-  }) : super(key: key);
+    required this.refetchUserData,
+  });
 
   @override
   _MusicPreviewState createState() => _MusicPreviewState();
@@ -50,7 +52,6 @@ class _MusicPreviewState extends State<MusicPreview> {
           'Authorization': '${dotenv.env['API_KEY']}',
         },
       );
-      print(response.body);
       if (response.statusCode == 200) {
         List<dynamic> friendsJson = jsonDecode(response.body);
         List<Map<String, String>> fetchedFriends = friendsJson
@@ -64,11 +65,9 @@ class _MusicPreviewState extends State<MusicPreview> {
             friends = fetchedFriends;
           });
         }
-      } else {
-        print('Failed to load friends');
-      }
+      } else {}
     } catch (e) {
-      print('Failed to load friends: $e');
+      ('Failed to load friends: $e');
     }
   }
 
@@ -91,20 +90,29 @@ class _MusicPreviewState extends State<MusicPreview> {
         }),
       );
 
+      if (!mounted) return;
+
       if (response.statusCode == 200) {
+        await widget.refetchUserData();
         setState(() {
           widget.unloock = true;
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Canción comprada con éxito')),
         );
-      } else {
+      } else if (response.statusCode == 501) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al comprar la canción')),
+          SnackBar(
+              content: Text('Error al comprar la canción: Ya la has comprado')),
+        );
+      } else if (response.statusCode == 502) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Error al comprar la canción: No tienes suficientes puntos')),
         );
       }
     } catch (e) {
-      print('Failed to purchase song: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al comprar la canción')),
       );

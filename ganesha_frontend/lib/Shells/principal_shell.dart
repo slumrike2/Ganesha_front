@@ -43,7 +43,7 @@ class _PrincipalshellState extends State<Principalshell> {
         refetchUserData: _refetchUserData,
       ),
       FriendsPage(),
-      MusicPage(),
+      MusicPage(refetchUserData: _refetchUserData),
       StadisticsPage(),
     ];
   }

@@ -148,7 +148,7 @@ class ExerciseItem extends StatelessWidget {
               Expanded(
                 child: Text(
                   exercise.nombre,
-                  style: TextStyle(fontSize: 18, color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ),
               ElevatedButton(
@@ -160,7 +160,7 @@ class ExerciseItem extends StatelessWidget {
           Divider(color: Colors.grey),
           Text(
             exercise.descripcion,
-            style: TextStyle(fontSize: 14, color: Colors.black),
+            style: TextStyle(fontSize: 12, color: Colors.black),
           ),
         ],
       ),
