@@ -56,6 +56,7 @@ class _RegisterNamePageState extends State<RegisterNamePage> {
           child: Column(
             children: [
               Container(
+                margin: EdgeInsets.all(20), // Added margin
                 padding: EdgeInsets.all(20),
                 height: sizeh,
                 child: Stack(
