@@ -52,7 +52,7 @@ class _RegisterShellState extends State<RegisterShell> {
             Align(
               alignment: Alignment.bottomRight,
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin: EdgeInsets.all(20), // Added margin
                 child: TextButton.icon(
                   icon: Icon(Icons.arrow_forward_outlined),
                   iconAlignment: IconAlignment.end,
@@ -69,7 +69,7 @@ class _RegisterShellState extends State<RegisterShell> {
             Align(
               alignment: Alignment.bottomLeft,
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin: EdgeInsets.all(20), // Added margin
                 child: TextButton.icon(
                   icon: Icon(Icons.arrow_back_outlined),
                   label: Text('Anterior'),

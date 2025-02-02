@@ -63,6 +63,7 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
+          margin: EdgeInsets.all(20), // Added margin
           height: sizeh,
           padding: EdgeInsets.all(20),
           child: FormBuilder(
