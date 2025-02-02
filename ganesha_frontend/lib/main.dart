@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ganesha_frontend/Pages/PrincipalPages/settings_page.dart';
 import 'package:ganesha_frontend/Pages/PrincipalPages/test_page.dart';
 import 'package:ganesha_frontend/Pages/login_page.dart';
 import 'package:ganesha_frontend/Shells/principal_shell.dart';
@@ -33,6 +34,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // Remove debug banner
       // Rutas necesarias para el funcionamiento de la navegación en la app
       routes: {
+        SettingsPage.routeName: (context) => SettingsPage(),
         RegisterShell.routeName: (context) => RegisterShell(),
         LoginPage.routeName: (context) => LoginPage(),
         Principalshell.routeName: (context) {
