@@ -37,10 +37,24 @@ class GiftConfirmationPage extends StatelessWidget {
     if (response.statusCode == 200) {
       // Handle successful response
       Navigator.pop(context);
+    } else if (response.statusCode == 501) {
+      // Handle error response
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Error al regalar la canción: Ya la ha adquirido')),
+      );
+    } else if (response.statusCode == 502) {
+      // Handle error response
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                'Error al regalar la canción: No tienes suficientes puntos')),
+      );
     } else {
       // Handle error response
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to send gift')),
+        SnackBar(
+            content: Text('Error al regalar la canción: ${response.body}')),
       );
     }
   }
@@ -61,7 +75,8 @@ class GiftConfirmationPage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text('Confirm Gift'),
-            backgroundColor: Colors.transparent, // Make AppBar background transparent
+            backgroundColor:
+                Colors.transparent, // Make AppBar background transparent
             elevation: 0, // Remove AppBar shadow
           ),
           body: Center(
@@ -73,9 +88,11 @@ class GiftConfirmationPage extends StatelessWidget {
                   height: 100.0, // Set the height for the larger avatar
                   child: CircleAvatar(
                     radius: 50.0,
-                    backgroundColor: Colors.blue, // Use a custom color for the avatar background
+                    backgroundColor: Colors
+                        .blue, // Use a custom color for the avatar background
                     child: Text(
-                      friendName[0].toUpperCase(), // Display the first letter of the name in uppercase
+                      friendName[0]
+                          .toUpperCase(), // Display the first letter of the name in uppercase
                       style: TextStyle(
                         fontSize: 60.0, // Larger font size for the character
                         color: Colors.white, // Ensure the text color is white
@@ -100,8 +117,10 @@ class GiftConfirmationPage extends StatelessWidget {
                       onPressed: () => _confirmGift(context),
                       child: Text('Confirmar'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white, // Set button background to white
-                        foregroundColor: Colors.purple, // Set button text color to purple
+                        backgroundColor:
+                            Colors.white, // Set button background to white
+                        foregroundColor:
+                            Colors.purple, // Set button text color to purple
                       ),
                     ),
                     SizedBox(width: 16),
@@ -111,8 +130,10 @@ class GiftConfirmationPage extends StatelessWidget {
                       },
                       child: Text('Cancelar'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white, // Set button background to white
-                        foregroundColor: Colors.purple, // Set button text color to purple
+                        backgroundColor:
+                            Colors.white, // Set button background to white
+                        foregroundColor:
+                            Colors.purple, // Set button text color to purple
                       ),
                     ),
                   ],
