@@ -6,15 +6,13 @@ class RegisterSimtomsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20), // Added margin
-      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.all(30), // Increased margin
+      padding: EdgeInsets.all(20), // Increased padding
       height: double.infinity,
       width: double.infinity,
       child: Center(
-        // Added Center widget
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Center the column vertically
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
                 child: Text(

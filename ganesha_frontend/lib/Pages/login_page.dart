@@ -52,8 +52,8 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.all(20), // Added margin
-                    padding: EdgeInsets.all(20),
+                    margin: EdgeInsets.all(30), // Increased margin
+                    padding: EdgeInsets.all(30), // Increased padding
                     height: sizeh,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment
