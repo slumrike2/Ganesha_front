@@ -115,53 +115,7 @@ class _TestPageState extends State<TestPage> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: _filterSymptoms().map((symptomTest) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 16.0),
-                            padding: EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.blueGrey[50],
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        symptomTest.data.pregunta,
-                                        style: TextStyle(
-                                            fontSize: 18, color: Colors.black),
-                                      ),
-                                    ),
-                                    StatefulBuilder(
-                                      builder: (BuildContext context,
-                                          StateSetter setState) {
-                                        return Checkbox(
-                                          value: symptomTest.isChecked(),
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              symptomTest.setChecked(value!);
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                Divider(color: Colors.grey),
-                                Text(
-                                  symptomTest.data.descripcion,
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.black),
-                                ),
-                              ],
-                            ),
-                          );
+                          return SymptomCard(symptomTest: symptomTest);
                         }).toList(),
                       ),
                     ),
@@ -212,5 +166,90 @@ class _TestPageState extends State<TestPage> {
     } else {
       print('Síntomas enviados');
     }
+  }
+}
+
+class SymptomCard extends StatefulWidget {
+  final SymptomTest symptomTest;
+
+  const SymptomCard({super.key, required this.symptomTest});
+
+  @override
+  _SymptomCardState createState() => _SymptomCardState();
+}
+
+class _SymptomCardState extends State<SymptomCard> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.blueGrey[50],
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  widget.symptomTest.data.pregunta,
+                  style: TextStyle(fontSize: 18, color: Colors.black),
+                ),
+              ),
+              StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Checkbox(
+                    value: widget.symptomTest.isChecked(),
+                    onChanged: (bool? value) {
+                      setState(() {
+                        widget.symptomTest.setChecked(value!);
+                      });
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+          Divider(color: Colors.grey),
+          AnimatedCrossFade(
+            firstChild: Text(
+              widget.symptomTest.data.descripcion,
+              style: TextStyle(fontSize: 14, color: Colors.black),
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+            ),
+            secondChild: Text(
+              widget.symptomTest.data.descripcion,
+              style: TextStyle(fontSize: 14, color: Colors.black),
+            ),
+            crossFadeState: _isExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 300),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: IconButton(
+              icon: Icon(
+                _isExpanded ? Icons.arrow_upward : Icons.arrow_downward,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
