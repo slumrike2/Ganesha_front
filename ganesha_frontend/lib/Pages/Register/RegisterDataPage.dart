@@ -63,14 +63,14 @@ class _RegisterDataPageState extends State<RegisterDataPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.all(30), // Increased margin
+          margin: EdgeInsets.all(24),
           height: sizeh,
-          padding: EdgeInsets.all(30), // Increased padding
+          padding: EdgeInsets.all(24),
           child: FormBuilder(
             key: _formKey,
             child: Column(
               mainAxisAlignment:
-                  MainAxisAlignment.center, // Center the column vertically
+                  MainAxisAlignment.center,
               children: [
                 Center(
                     child: Text(

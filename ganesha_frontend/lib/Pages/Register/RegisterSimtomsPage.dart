@@ -6,8 +6,8 @@ class RegisterSimtomsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(30), // Increased margin
-      padding: EdgeInsets.all(20), // Increased padding
+      margin: EdgeInsets.all(24),
+      padding: EdgeInsets.all(24),
       height: double.infinity,
       width: double.infinity,
       child: Center(
