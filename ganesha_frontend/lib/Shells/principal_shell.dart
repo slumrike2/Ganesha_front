@@ -43,7 +43,7 @@ class _PrincipalshellState extends State<Principalshell> {
         refetchUserData: _refetchUserData,
       ),
       FriendsPage(),
-      MusicPage(),
+      MusicPage(refetchUserData: _refetchUserData),
       StadisticsPage(),
     ];
   }
@@ -138,6 +138,7 @@ class _PrincipalshellState extends State<Principalshell> {
                         '${_userData.puntaje}',
                         style: TextStyle(fontSize: 24, color: Colors.white),
                       ),
+                      
                     ],
                   ),
                 ],
@@ -146,7 +147,7 @@ class _PrincipalshellState extends State<Principalshell> {
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
-            toolbarHeight: sizeh * 0.1,
+            toolbarHeight: sizeh * 0.2,
             actions: [
               IconButton(
                 iconSize: 46,
@@ -157,6 +158,7 @@ class _PrincipalshellState extends State<Principalshell> {
             ],
           ),
         ),
+       
       ],
     );
   }

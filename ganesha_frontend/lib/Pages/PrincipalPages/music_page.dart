@@ -8,7 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MusicPage extends StatelessWidget {
-  const MusicPage({super.key});
+  final Future<void> Function() refetchUserData;
+
+  const MusicPage({super.key, required this.refetchUserData});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,11 @@ class MusicPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text('Música', style: TextStyle(fontSize: 32, color: Colors.white)),
+          Text(
+            'Aqui puedes cangear tus puntos para desbloquear y regalarle canciones a tus amigos, asi como escuchar tu propia musica',
+            style: TextStyle(fontSize: 12, color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
           FutureBuilder<List<Song>>(
               future: getSongs(),
               builder: (context, snapshot) {
@@ -49,6 +56,7 @@ class MusicPage extends StatelessWidget {
                                           unloock: song.unloock,
                                           price: song.costePun,
                                           songId: song.idCancion,
+                                          refetchUserData: refetchUserData,
                                         ))
                                     .toList()),
                           ),
@@ -96,4 +104,5 @@ class MusicPage extends StatelessWidget {
       throw Exception('Failed to load songs');
     }
   }
+
 }

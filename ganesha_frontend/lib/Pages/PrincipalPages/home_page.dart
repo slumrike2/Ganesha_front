@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               SizedBox(
                 width: double.infinity,
                 child: Text(
-                  'Test Diario',
+                  '¿Cómo te sientes hoy?',
                   style: TextStyle(fontSize: 24, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   width: double.infinity,
                   child: Text(
                     'Ejercicios',
-                    style: TextStyle(fontSize: 32, color: Colors.white),
+                    style: TextStyle(fontSize: 24, color: Colors.white),
                     textAlign: TextAlign.center,
                   )),
               ElevatedButton(

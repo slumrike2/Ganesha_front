@@ -18,15 +18,9 @@ class RegisterSimtomsPage extends StatelessWidget {
           children: [
             Center(
                 child: Text(
-              'Síntomas',
-              style: TextStyle(fontSize: 32),
+              'Bienvenido a Ganesha!',
+              style: TextStyle(fontSize: 16),
             )),
-            Center(
-              child: Text(
-                'Por favor ingresa tus síntomas',
-                style: TextStyle(fontSize: 16),
-              ),
-            )
           ],
         ),
       ),
