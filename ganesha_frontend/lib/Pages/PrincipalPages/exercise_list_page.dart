@@ -22,6 +22,7 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
   void initState() {
     super.initState();
     _exercises = widget.exercises;
+    _exercises.sort((a, b) => a.prioridad.compareTo(b.prioridad));
   }
 
   Future<void> markExerciseAsDone(int exerciseId) async {
@@ -80,6 +81,7 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
                   style: TextStyle(fontSize: 32, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
+                SizedBox(height: 8),
                 Expanded(
                   child: _exercises.isEmpty
                       ? Center(
@@ -97,7 +99,12 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
                             ),
                           ),
                         )
-                      : ListView.builder(
+                      : GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.75,
+                          ),
                           itemCount: _exercises.length,
                           itemBuilder: (context, index) {
                             final exercise = _exercises[index];
@@ -129,6 +136,40 @@ class ExerciseItem extends StatelessWidget {
     required this.onDone,
   });
 
+  void _showExplanation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.blueGrey[600],
+                // Replace with your image widget
+              ),
+              SizedBox(height: 16),
+              Text(
+                exercise.descripcion,
+                style: TextStyle(fontSize: 14, color: Colors.black),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -139,30 +180,63 @@ class ExerciseItem extends StatelessWidget {
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
             children: [
-              Expanded(
-                child: Text(
-                  exercise.nombre,
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+              Container(
+                width: double.infinity,
+                height: 100,
+                color: Colors.blueGrey[600],
+                // Replace with your image widget
+              ),
+              SizedBox(height: 8),
+              Container(
+                height: constraints.maxHeight * 0.2,
+                child: Center(
+                  child: Text(
+                    exercise.nombre,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: onDone,
-                child: Text('Hecho'),
+              Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => _showExplanation(context),
+                    icon: Icon(Icons.info_outline),
+                    label: Text('Detalles', style: TextStyle(fontSize: 12)),
+                  ),
+                  SizedBox(height: 8),
+                  ElevatedButton.icon(
+                    onPressed: onDone,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      textStyle: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    icon: Icon(Icons.check_circle_outline),
+                    label: Text(
+                      'Hecho',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
               ),
             ],
-          ),
-          Divider(color: Colors.grey),
-          Text(
-            exercise.descripcion,
-            style: TextStyle(fontSize: 12, color: Colors.black),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
