@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ExerciseListPage extends StatefulWidget {
   static final String routeName = '/exercises';
@@ -17,12 +18,21 @@ class ExerciseListPage extends StatefulWidget {
 
 class _ExerciseListPageState extends State<ExerciseListPage> {
   late List<Ejercicio> _exercises;
+  String backgroundImage = 'assets/fondo.jpg'; // Default background image
 
   @override
   void initState() {
     super.initState();
+    _loadBackgroundImage();
     _exercises = widget.exercises;
     _exercises.sort((a, b) => a.prioridad.compareTo(b.prioridad));
+  }
+
+  Future<void> _loadBackgroundImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      backgroundImage = prefs.getString('fondo') ?? 'assets/fondo.jpg';
+    });
   }
 
   Future<void> markExerciseAsDone(int exerciseId) async {
@@ -58,7 +68,7 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/fondo.jpg', // Replace with your image path
+            backgroundImage, // Use the preferred background image
             fit: BoxFit.cover,
           ),
         ),
@@ -92,7 +102,7 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
                               'No hay más ejercicios, \n¡continúa así!',
                               style: TextStyle(
                                 fontSize: 24,
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,

@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TestPage extends StatefulWidget {
   static final String routeName = '/test';
@@ -21,16 +22,25 @@ class _TestPageState extends State<TestPage> {
   final List<SymptomTest> _symptomTests = [];
   String _selectedType = 'Todos';
   final List<String> _types = ['Todos'];
+  String backgroundImage = 'assets/fondo.jpg'; // Default background image
 
   @override
   void initState() {
     super.initState();
+    _loadBackgroundImage();
     for (var sintoma in widget.symptoms) {
       _symptomTests.add(SymptomTest(data: sintoma));
       if (!_types.contains(sintoma.tipo)) {
         _types.add(sintoma.tipo);
       }
     }
+  }
+
+  Future<void> _loadBackgroundImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      backgroundImage = prefs.getString('fondo') ?? 'assets/fondo.jpg';
+    });
   }
 
   @override
@@ -56,7 +66,7 @@ class _TestPageState extends State<TestPage> {
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/fondo.jpg', // Set the path to your background image
+            backgroundImage, // Use the preferred background image
             fit: BoxFit.cover,
             color: Colors.black.withAlpha(100), // Corrected method
             colorBlendMode: BlendMode.darken,

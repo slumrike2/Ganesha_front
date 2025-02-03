@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class GiftConfirmationPage extends StatelessWidget {
+class GiftConfirmationPage extends StatefulWidget {
   final String userId;
   final String friendId;
   final String songId;
@@ -19,6 +20,26 @@ class GiftConfirmationPage extends StatelessWidget {
     required this.songTitle,
   }) : super(key: key);
 
+  @override
+  _GiftConfirmationPageState createState() => _GiftConfirmationPageState();
+}
+
+class _GiftConfirmationPageState extends State<GiftConfirmationPage> {
+  String backgroundImage = 'assets/fondo.jpg'; // Default background image
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBackgroundImage();
+  }
+
+  Future<void> _loadBackgroundImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      backgroundImage = prefs.getString('fondo') ?? 'assets/fondo.jpg';
+    });
+  }
+
   Future<void> _confirmGift(BuildContext context) async {
     final url = '${dotenv.env['API_URL']}/friends/give';
     final response = await http.post(
@@ -28,30 +49,26 @@ class GiftConfirmationPage extends StatelessWidget {
         'Authorization': '${dotenv.env['API_KEY']}',
       },
       body: jsonEncode({
-        'id_usuario': userId,
-        'id_amigo': friendId,
-        'id_cancion': songId,
+        'id_usuario': widget.userId,
+        'id_amigo': widget.friendId,
+        'id_cancion': widget.songId,
       }),
     );
 
     if (response.statusCode == 200) {
-      // Handle successful response
       Navigator.pop(context);
     } else if (response.statusCode == 501) {
-      // Handle error response
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Error al regalar la canción: Ya la ha adquirido')),
       );
     } else if (response.statusCode == 502) {
-      // Handle error response
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
                 'Error al regalar la canción: No tienes suficientes puntos')),
       );
     } else {
-      // Handle error response
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Error al regalar la canción: ${response.body}')),
@@ -65,7 +82,7 @@ class GiftConfirmationPage extends StatelessWidget {
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/fondo.jpg', // Replace with your image path
+            backgroundImage, // Use the preferred background image
             fit: BoxFit.cover,
             color: Colors.black.withAlpha(100), // Corrected method
             colorBlendMode: BlendMode.darken,
@@ -91,7 +108,7 @@ class GiftConfirmationPage extends StatelessWidget {
                     backgroundColor: Colors
                         .blue, // Use a custom color for the avatar background
                     child: Text(
-                      friendName[0]
+                      widget.friendName[0]
                           .toUpperCase(), // Display the first letter of the name in uppercase
                       style: TextStyle(
                         fontSize: 60.0, // Larger font size for the character
@@ -102,7 +119,7 @@ class GiftConfirmationPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  '¿Quieres regalar "$songTitle" a $friendName?',
+                  '¿Quieres regalar "${widget.songTitle}" a ${widget.friendName}?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,

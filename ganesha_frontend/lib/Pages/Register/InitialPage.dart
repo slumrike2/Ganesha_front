@@ -21,7 +21,7 @@ class InitialRegisterpage extends StatelessWidget {
             )),
             Center(
               child: Text(
-                'Esta es una app que te ayudará con tus síntomas de estrés a través de...',
+                'Esta es una app que te ayudará con tus síntomas de estrés',
                 style: TextStyle(fontSize: 16),
               ),
             )

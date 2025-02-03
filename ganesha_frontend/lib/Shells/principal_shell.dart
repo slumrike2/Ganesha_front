@@ -136,8 +136,26 @@ class _PrincipalshellState extends State<Principalshell> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hola, ${_userData.nombre}',
-                      style: TextStyle(fontSize: 32, color: Colors.white)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Hola, ${_userData.nombre}',
+                          style: TextStyle(fontSize: 32, color: Colors.white)),
+                      IconButton(
+                        iconSize: 46,
+                        color: Colors.white,
+                        padding: EdgeInsets.only(right: 16),
+                        onPressed: () async {
+                          final result = await Navigator.pushNamed(
+                              context, SettingsPage.routeName);
+                          if (result == true) {
+                            _loadBackgroundImage(); // Reload background image
+                          }
+                        },
+                        icon: Icon(Icons.person_outline),
+                      ),
+                    ],
+                  ),
                   Row(
                     spacing: 8,
                     children: [
@@ -159,20 +177,6 @@ class _PrincipalshellState extends State<Principalshell> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             toolbarHeight: sizeh * 0.2,
-            actions: [
-              IconButton(
-                iconSize: 46,
-                padding: EdgeInsets.only(right: 16),
-                onPressed: () async {
-                  final result = await Navigator.pushNamed(
-                      context, SettingsPage.routeName);
-                  if (result == true) {
-                    _loadBackgroundImage(); // Reload background image
-                  }
-                },
-                icon: Icon(Icons.person_outline),
-              ),
-            ],
           ),
         ),
       ],
