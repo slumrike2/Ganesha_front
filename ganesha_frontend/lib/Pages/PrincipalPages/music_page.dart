@@ -23,7 +23,7 @@ class MusicPage extends StatelessWidget {
         children: [
           Text('Música', style: TextStyle(fontSize: 32, color: Colors.white)),
           Text(
-            'Aqui puedes cangear tus puntos para desbloquear y regalarle canciones a tus amigos, asi como escuchar tu propia musica',
+            'Aqui puedes canjear tus puntos para desbloquear y regalarle canciones a tus amigos, asi como escuchar tu propia música',
             style: TextStyle(fontSize: 12, color: Colors.white),
             textAlign: TextAlign.center,
           ),

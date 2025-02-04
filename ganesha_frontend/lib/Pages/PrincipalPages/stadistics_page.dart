@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class StadisticsPage extends StatefulWidget {
   const StadisticsPage({super.key});
@@ -10,7 +12,7 @@ class StadisticsPage extends StatefulWidget {
 class _StadisticsPageState extends State<StadisticsPage> {
   List<bool> isSelected = [true, false];
   PageController _pageController = PageController();
-  int _currentPage = 0;
+  int _currentPage = 0; // To keep track of the current page index
 
   @override
   void dispose() {
@@ -28,6 +30,23 @@ class _StadisticsPageState extends State<StadisticsPage> {
     });
   }
 
+  void _onTogglePressed(int index) {
+    setState(() {
+      for (int i = 0; i < isSelected.length; i++) {
+        isSelected[i] = i == index;
+      }
+      _currentPage = index * 2; // Update the current page index accordingly
+      _pageController.jumpToPage(_currentPage);
+    });
+  }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _currentPage = index;
+      _currentPage = (_currentPage / 2).floor() * 2; // Constrain page to the current group
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,17 +61,7 @@ class _StadisticsPageState extends State<StadisticsPage> {
             fillColor: const Color.fromARGB(181, 103, 147, 243),
             borderRadius: BorderRadius.circular(8.0),
             isSelected: isSelected,
-            onPressed: (int index) {
-              setState(() {
-                for (int i = 0; i < isSelected.length; i++) {
-                  if (i == index) {
-                    isSelected[i] = true;
-                  } else {
-                    isSelected[i] = false;
-                  }
-                }
-              });
-            },
+            onPressed: _onTogglePressed,
             children: <Widget>[
               Container(
                 width: 100,
@@ -71,7 +80,7 @@ class _StadisticsPageState extends State<StadisticsPage> {
                 child: Text(
                   'Mes',
                   style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
                 ),
               ),
             ],
@@ -79,9 +88,12 @@ class _StadisticsPageState extends State<StadisticsPage> {
           Expanded(
             child: PageView(
               controller: _pageController,
+              onPageChanged: _onPageChanged,
               children: <Widget>[
                 Page2(data: 'some data'),
                 Page3(),
+                Page4(data: 'some data'),
+                Page5(),
               ],
             ),
           ),
@@ -93,23 +105,25 @@ class _StadisticsPageState extends State<StadisticsPage> {
                 IconButton(
                   icon: Icon(Icons.arrow_left, color: Colors.white),
                   onPressed: () {
-                    _pageController.previousPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
+                    if (_currentPage % 2 != 0) {
+                      _pageController.previousPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
                   },
                 ),
                 Row(
                   children: [
                     Icon(
                       Icons.circle,
-                      color: _currentPage == 0 ? Colors.white : Colors.grey,
+                      color: (_currentPage % 2 == 0) ? Colors.white : Colors.grey,
                       size: 12,
                     ),
                     SizedBox(width: 8),
                     Icon(
                       Icons.circle,
-                      color: _currentPage == 1 ? Colors.white : Colors.grey,
+                      color: (_currentPage % 2 == 1) ? Colors.white : Colors.grey,
                       size: 12,
                     ),
                   ],
@@ -117,10 +131,12 @@ class _StadisticsPageState extends State<StadisticsPage> {
                 IconButton(
                   icon: Icon(Icons.arrow_right, color: Colors.white),
                   onPressed: () {
-                    _pageController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
+                    if (_currentPage % 2 == 0) {
+                      _pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
                   },
                 ),
               ],
@@ -159,7 +175,7 @@ class Page2 extends StatelessWidget {
               Text('Racha más larga',
                   style: TextStyle(fontSize: 18, color: Colors.white)),
               SizedBox(height: 8),
-              Text('10 días',
+              Text('2 días',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ],
           ),
@@ -173,21 +189,7 @@ class Page2 extends StatelessWidget {
               Text('Ejercicios realizados',
                   style: TextStyle(fontSize: 18, color: Colors.white)),
               SizedBox(height: 8),
-              Text('25 ejercicios',
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
-            ],
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.all(8.0),
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Síntomas aliviados',
-                  style: TextStyle(fontSize: 18, color: Colors.white)),
-              SizedBox(height: 8),
-              Text('5 síntomas',
+              Text('4 ejercicios',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ],
           ),
@@ -211,7 +213,7 @@ class Page3 extends StatelessWidget {
               Text('Amigos nuevos',
                   style: TextStyle(fontSize: 18, color: Colors.white)),
               SizedBox(height: 8),
-              Text('15 amigos',
+              Text('1 amigos',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ],
           ),
@@ -225,7 +227,86 @@ class Page3 extends StatelessWidget {
               Text('Horas de música',
                   style: TextStyle(fontSize: 18, color: Colors.white)),
               SizedBox(height: 8),
-              Text('120 horas',
+              Text('5 horas',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Page4 extends StatelessWidget {
+  final String data;
+  Page4({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Racha más larga',
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+              SizedBox(height: 8),
+              Text('6 días',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Ejercicios realizados',
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+              SizedBox(height: 8),
+              Text('16 ejercicios',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Page5 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Amigos nuevos',
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+              SizedBox(height: 8),
+              Text('3 amigos',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Horas de música',
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+              SizedBox(height: 8),
+              Text('20 horas',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ],
           ),
