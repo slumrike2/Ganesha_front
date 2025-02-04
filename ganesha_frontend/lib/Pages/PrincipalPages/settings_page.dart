@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:ganesha_frontend/Pages/login_page.dart';
+import 'package:ganesha_frontend/Shells/register_shell.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -76,21 +77,25 @@ class _SettingsPageState extends State<SettingsPage> {
                           _buildItemContainer(
                               'Fondo Clasico', 'assets/fondo.jpg', context),
                           SizedBox(width: 10),
-                          _buildItemContainer('Pintura ', 'assets/Blue1.jpg', context),
+                          _buildItemContainer(
+                              'Pintura ', 'assets/Blue1.jpg', context),
                           SizedBox(width: 10),
-                          _buildItemContainer('Bosques', 'assets/Blue2.jpg', context),
+                          _buildItemContainer(
+                              'Bosques', 'assets/Blue2.jpg', context),
                           SizedBox(width: 10),
-                          _buildItemContainer('Ciudad', 'assets/Blue3.jpg', context),
+                          _buildItemContainer(
+                              'Ciudad', 'assets/Blue3.jpg', context),
                           // Add more items as needed
                         ],
                       ),
                     ),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {
-                          Supabase.instance.client.auth.signOut();
-                          Navigator.of(context)
-                              .pushReplacementNamed(LoginPage.routeName);
+                        onPressed: () async {
+                          await Supabase.instance.client.auth.signOut();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: Text('Cerrar Sesión'),
                       ),
@@ -105,7 +110,8 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildItemContainer(String name, String imagePath, BuildContext context) {
+  Widget _buildItemContainer(
+      String name, String imagePath, BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(

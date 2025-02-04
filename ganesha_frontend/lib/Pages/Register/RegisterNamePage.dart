@@ -50,70 +50,85 @@ class _RegisterNamePageState extends State<RegisterNamePage> {
     final sizeh = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: FormBuilder(
-          key: _formKey,
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(24),
-                padding: EdgeInsets.all(24),
-                height: sizeh,
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment
-                          .center, // Changed from center to start
-                      spacing: 20,
-                      children: [
-                        Text('¿Cómo te llamas?', style: TextStyle(fontSize: 32)),
-                        FormBuilderTextField(
-                          name: 'name',
-                          controller: _nameController,
-                          decoration: InputDecoration(labelText: 'Nombre'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa tu nombre';
-                            }
-                            return null;
-                          },
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: FormBuilder(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(24),
+                        padding: EdgeInsets.all(24),
+                        height: sizeh,
+                        child: Stack(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .center, // Changed from center to start
+                              spacing: 20,
+                              children: [
+                                Text('¿Cómo te llamas?',
+                                    style: TextStyle(fontSize: 32)),
+                                FormBuilderTextField(
+                                  name: 'name',
+                                  controller: _nameController,
+                                  decoration:
+                                      InputDecoration(labelText: 'Nombre'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu nombre';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                FormBuilderTextField(
+                                  name: 'last_name',
+                                  controller: _lastNameController,
+                                  decoration:
+                                      InputDecoration(labelText: 'Apellido'),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu apellido';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              bottom: sizeh * 0.1,
+                              left: 0,
+                              right: 0,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('¿Ya tienes cuenta?'),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, LoginPage.routeName);
+                                    },
+                                    child: Text('Inicia sesión'),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                        FormBuilderTextField(
-                          name: 'last_name',
-                          controller: _lastNameController,
-                          decoration: InputDecoration(labelText: 'Apellido'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa tu apellido';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                    Positioned(
-                      bottom: sizeh * 0.1,
-                      left: 0,
-                      right: 0,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('¿Ya tienes cuenta?'),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, LoginPage.routeName);
-                            },
-                            child: Text('Inicia sesión'),
-                          )
-                        ],
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

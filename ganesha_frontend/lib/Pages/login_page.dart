@@ -56,8 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.all(24),
                     height: sizeh,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment
-                          .center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 20,
                       children: [
                         Text('Inicio de Sesión',
@@ -96,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                                   // Fetch user data after successful login
                                   final userData = await fetchUserData();
 
-                                  Navigator.pushReplacement(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
